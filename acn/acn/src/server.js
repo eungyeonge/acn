@@ -37,12 +37,18 @@ app.use(express.json());
 
 /* 6) 정적 파일 서빙 */
 const publicPath = path.join(__dirname, "..", "public");
-app.use(
-  express.static(publicPath, {
-    maxAge: "7d",
-    etag: true,
-  })
-);
+
+app.use(express.static(publicPath, {
+  etag: true,
+  maxAge: "7d",
+  setHeaders: (res, filePath) => {
+    // HTML 파일은 캐시 금지 (header.html, index.html 등)
+    if (filePath.endsWith(".html")) {
+      res.setHeader("Cache-Control", "no-store, max-age=0");
+    }
+  }
+}));
+
 
 /* 7) 헬스 체크 (Render에서 상태확인용) */
 app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
