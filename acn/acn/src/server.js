@@ -47,10 +47,7 @@ app.use(
 /* 7) 헬스 체크 (Render에서 상태확인용) */
 app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
 
-/* -------------------- 상품 데이터 -------------------- */
-const products = [
-  // 네가 만든 상품 배열 그대로 복사
-];
+
 
 /* 모든 상품 조회 */
 app.get("/api/products", (req, res) => {
