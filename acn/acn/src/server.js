@@ -6,7 +6,6 @@ const compression = require("compression");
 const helmet = require("helmet");
 // 맨 위 다른 require 아래에 추가
 const products = require("./data/products");
-const filtered = Array.isArray(items?.data) ? items.data : (items?.records || []);
 
 
 
