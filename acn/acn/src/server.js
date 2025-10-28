@@ -4,6 +4,9 @@ const cors = require("cors");
 const path = require("path");
 const compression = require("compression");
 const helmet = require("helmet");
+// 맨 위 다른 require 아래에 추가
+const products = require("./data/products");
+
 
 const app = express();
 
