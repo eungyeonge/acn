@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>장바구니 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ 헤더 -->
+  <div id="header"></div>
+
+  <!-- ✅ 장바구니 -->
+  <section class="max-w-7xl mx-auto px-6 py-8">
+    <h1 class="text-3xl font-bold mb-8">🛒 장바구니</h1>
+
+    <!-- 빈 장바구니 -->
+    <div id="emptyCart" class="text-center py-16 hidden">
+      <div class="text-gray-400 text-8xl mb-6">🛒</div>
+      <h2 class="text-2xl font-bold mb-4 text-gray-600">장바구니가 비어있습니다</h2>
+      <p class="text-gray-500 mb-8">원하는 상품을 장바구니에 추가해보세요!</p>
+      <button onclick="window.location.href='products.html'" 
+              class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+        쇼핑 계속하기
+      </button>
+    </div>
+
+    <!-- 장바구니 목록 -->
+    <div id="cartContent" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- 장바구니 아이템들 -->
+        <div class="lg:col-span-2">
+          <div id="cartItems" class="space-y-4">
+            <!-- 동적으로 생성됩니다 -->
+          </div>
+        </div>
+
+        <!-- 주문 요약 -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-lg shadow-sm p-6 sticky top-8">
+            <h3 class="text-xl font-bold mb-4">주문 요약</h3>
+            
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between">
+                <span>상품 금액</span>
+                <span id="subtotal">0원</span>
+              </div>
+              <div class="flex justify-between">
+                <span>배송비</span>
+                <span id="shipping">무료</span>
+              </div>
+              <div class="border-t pt-3">
+                <div class="flex justify-between text-lg font-bold">
+                  <span>총 금액</span>
+                  <span id="total">0원</span>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="checkout()" 
+                    class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition font-semibold mb-3">
+              💳 주문하기
+            </button>
+            
+            <button onclick="clearCart()" 
+                    class="w-full bg-gray-200 text-gray-700 py-2 px-6 rounded-lg hover:bg-gray-300 transition">
+              장바구니 비우기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ 푸터 -->
+  <div id="footer"></div>
+
+  <script>
+    let cart = [];
+
+    // 페이지 로드 시 로그인 체크 및 장바구니 로드
+    window.onload = function() {
+      // Firebase로 로그인 체크
+      firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          alert("로그인이 필요합니다.");
+          window.location.href = "login.html";
+        } else {
+          loadCart();
+        }
+      });
+    };
+
+    // 장바구니 로드
+    function loadCart() {
+      cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      displayCart();
+    }
+
+    // 장바구니 표시
+    function displayCart() {
+      const emptyCart = document.getElementById('emptyCart');
+      const cartContent = document.getElementById('cartContent');
+      
+      if (cart.length === 0) {
+        emptyCart.classList.remove('hidden');
+        cartContent.classList.add('hidden');
+        return;
+      }
+
+      emptyCart.classList.add('hidden');
+      cartContent.classList.remove('hidden');
+
+      // 장바구니 아이템들 표시
+      const cartItems = document.getElementById('cartItems');
+      cartItems.innerHTML = cart.map(item => `
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <div class="flex items-center space-x-4">
+            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg">
+            
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg">${item.name}</h3>
+              <p class="text-gray-600">${item.price.toLocaleString()}원</p>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+              <button onclick="updateQuantity(${item.id}, -1)" 
+                      class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+                -
+              </button>
+              <span class="w-8 text-center font-semibold">${item.quantity}</span>
+              <button onclick="updateQuantity(${item.id}, 1)" 
+                      class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+                +
+              </button>
+            </div>
+            
+            <div class="text-right">
+              <p class="font-bold text-lg">${(item.price * item.quantity).toLocaleString()}원</p>
+              <button onclick="removeItem(${item.id})" 
+                      class="text-red-500 hover:text-red-700 text-sm mt-2">
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // 주문 요약 업데이트
+      updateOrderSummary();
+    }
+
+    // 수량 업데이트
+    function updateQuantity(productId, change) {
+      const item = cart.find(item => item.id === productId);
+      if (!item) return;
+
+      item.quantity += change;
+      
+      if (item.quantity <= 0) {
+        removeItem(productId);
+        return;
+      }
+
+      saveCart();
+      displayCart();
+    }
+
+    // 아이템 삭제
+    function removeItem(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart();
+      displayCart();
+      
+      showToast('상품이 장바구니에서 제거되었습니다.');
+    }
+
+    // 장바구니 비우기
+    function clearCart() {
+      if (confirm('장바구니를 비우시겠습니까?')) {
+        cart = [];
+        saveCart();
+        displayCart();
+        showToast('장바구니가 비워졌습니다.');
+      }
+    }
+
+    // 장바구니 저장
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // 헤더의 장바구니 개수 업데이트
+      updateCartCount();
+    }
+
+    // 주문 요약 업데이트
+    function updateOrderSummary() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const shipping = subtotal >= 50000 ? 0 : 3000; // 5만원 이상 무료배송
+      const total = subtotal + shipping;
+
+      document.getElementById('subtotal').textContent = `${subtotal.toLocaleString()}원`;
+      document.getElementById('shipping').textContent = shipping === 0 ? '무료' : `${shipping.toLocaleString()}원`;
+      document.getElementById('total').textContent = `${total.toLocaleString()}원`;
+
+      // 배송비 안내
+      if (shipping > 0) {
+        document.getElementById('shipping').innerHTML = `
+          ${shipping.toLocaleString()}원
+          <span class="text-xs text-blue-600 ml-1">(${(50000 - subtotal).toLocaleString()}원 더 구매시 무료배송)</span>
+        `;
+      }
+    }
+
+    // 장바구니 개수 업데이트는 include.js의 전역 함수 사용
+
+    // 체크아웃
+    function checkout() {
+      if (cart.length === 0) return;
+
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const shipping = total >= 50000 ? 0 : 3000;
+      const finalTotal = total + shipping;
+
+      alert(`주문 금액: ${finalTotal.toLocaleString()}원\n\n결제 기능은 준비 중입니다.`);
+      
+      // 실제 구현 시:
+      // - 결제 API 연동
+      // - 주문 정보 서버 전송
+      // - 결제 완료 후 장바구니 비우기
+    }
+
+    // 토스트 메시지 표시
+    function showToast(message) {
+      const existingToast = document.getElementById('toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      const toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full';
+      toast.innerHTML = `
+        <div class="flex items-center">
+          <span class="mr-2">✅</span>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-x-full');
+      }, 100);
+      
+      setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 300);
+      }, 3000);
+    }
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</body>
+</html>

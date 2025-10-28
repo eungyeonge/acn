@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>상품 상세 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <div id="header"></div>
+
+  <section class="max-w-7xl mx-auto px-6 py-8">
+    <div id="loading" class="text-center py-16">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <p class="mt-4 text-gray-600">상품 정보를 불러오는 중...</p>
+    </div>
+
+    <div id="productDetail" class="hidden"></div>
+
+    <div id="notFound" class="text-center py-16 hidden">
+      <div class="text-red-500 text-6xl mb-4">😿</div>
+      <h2 class="text-2xl font-bold mb-4">상품을 찾을 수 없습니다</h2>
+      <button onclick="window.location.href='products.html'" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">상품 목록으로</button>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script>
+    window.onload = function() {
+      const productData = localStorage.getItem('selectedProduct');
+      if (!productData) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('notFound').classList.remove('hidden');
+        return;
+      }
+
+      const product = JSON.parse(productData);
+      displayProductDetail(product);
+    };
+
+    function displayProductDetail(product) {
+      document.getElementById('loading').classList.add('hidden');
+      const container = document.getElementById('productDetail');
+      container.classList.remove('hidden');
+
+      container.innerHTML = `
+        <button onclick="window.history.back()" class="mb-6 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center">
+          ← 뒤로가기
+        </button>
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden md:flex">
+          <img src="${product.image}" alt="${product.name}" class="md:w-1/2 w-full h-96 object-cover">
+          <div class="p-8 md:w-1/2">
+            <h1 class="text-3xl font-bold mb-4">${product.name}</h1>
+            <p class="text-gray-600 mb-4">${product.description}</p>
+            <div class="flex items-center mb-4">
+              <span class="text-yellow-400">${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}</span>
+              <span class="ml-2 text-gray-600">${product.rating}</span>
+            </div>
+            <div class="text-3xl font-bold text-blue-600 mb-6">${product.price.toLocaleString()}원</div>
+            ${product.weight ? `<p class="text-gray-500 mb-2">용량: ${product.weight}</p>` : ''}
+            ${product.size ? `<p class="text-gray-500 mb-2">크기: ${product.size}</p>` : ''}
+            <button onclick="addToCart(${product.id})" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">장바구니에 추가</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function addToCart(id) {
+      const product = JSON.parse(localStorage.getItem('selectedProduct'));
+      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) existing.quantity += 1;
+      else cart.push({ ...product, quantity: 1 });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert(`${product.name}이(가) 장바구니에 추가되었습니다!`);
+    }
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</body>
+</html>

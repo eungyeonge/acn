@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>로그인 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-white text-gray-800">
+
+  <div id="header"></div>
+
+  <section class="flex justify-center items-center py-16 px-4 bg-gray-50 min-h-[70vh]">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+      <h2 class="text-xl font-bold text-center mb-6">로그인</h2>
+
+      <form id="loginForm">
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1" for="userid">아이디</label>
+          <input type="text" id="userid" name="userid" placeholder="아이디(이메일) 입력" class="w-full border px-3 py-2 rounded" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1" for="password">비밀번호</label>
+          <input type="password" id="password" name="password" placeholder="비밀번호 입력" class="w-full border px-3 py-2 rounded" required>
+        </div>
+        
+        <p id="error" class="text-red-500 text-sm mb-4 hidden">아이디 또는 비밀번호가 올바르지 않습니다.</p>
+
+        <button type="submit" class="w-full bg-sky-500 text-white py-2 rounded hover:bg-sky-600 font-semibold">
+          로그인
+        </button>
+
+        <div class="text-center mt-6 text-sm text-gray-600 space-x-3">
+          <a href="id-find.html" class="hover:underline">아이디 찾기</a>
+          <a href="pw-find.html" class="hover:underline">비밀번호 찾기</a>
+          <a href="signup.html" class="font-semibold text-black hover:underline">회원가입</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    // 🔥 여기에 본인의 Firebase 프로젝트 설정 코드를 붙여넣으세요.
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+
+    // Firebase 앱 초기화
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // 로그인 폼 제출 이벤트
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('userid').value;
+      const pw = document.getElementById('password').value;
+      const error = document.getElementById('error');
+      
+      error.classList.add('hidden'); // 이전 에러 메시지 숨기기
+
+      // Firebase Auth로 로그인
+      auth.signInWithEmailAndPassword(id, pw)
+        .then((userCredential) => {
+          // 로그인 성공
+          console.log('로그인 성공:', userCredential.user);
+          window.location.href = "index.html"; // 메인 페이지로 이동
+        })
+        .catch((authError) => {
+          // 로그인 실패
+          console.error("로그인 오류: ", authError);
+          error.textContent = "아이디 또는 비밀번호가 올바르지 않습니다.";
+          error.classList.remove('hidden');
+        });
+    });
+  </script>
+
+</body>
+</html>

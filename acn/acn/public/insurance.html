@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>반려동물 보험 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ 헤더 -->
+  <div id="header"></div>
+
+  <!-- ✅ 본문 -->
+  <section class="max-w-4xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-center mb-8">반려동물 보험 안내</h1>
+    <p class="text-center text-gray-600 mb-12">
+      아래 보험사에서 제공하는 반려동물 보험을 확인하고 가입할 수 있습니다.<br>
+      각 버튼을 클릭하면 해당 보험사 공식 홈페이지로 이동합니다.
+    </p>
+
+    <div class="grid sm:grid-cols-2 gap-6">
+      <!-- 삼성화재 -->
+      <a href="https://direct.samsungfire.com/mall/PP030706_001.html" target="_blank"
+         class="block p-6 border rounded-lg shadow hover:shadow-md bg-white transition">
+        <h2 class="text-xl font-semibold mb-2">삼성화재 펫보험</h2>
+        <p class="text-gray-600 text-sm">삼성화재 다이렉트에서 제공하는 반려동물 보험 상품.</p>
+      </a>
+
+      <!-- DB손해보험 -->
+      <a href="https://www.directidb.co.kr/l_pet/index.html?utm_medium=cpc&utm_source=cm_google_sa&utm_campaign=pet_dog&utm_term=DB%EC%86%90%ED%95%B4%EB%B3%B4%ED%97%98%ED%8E%AB%EB%B3%B4%ED%97%98&utm_content=L329&network=g&device=c&keyword=db%EC%86%90%ED%95%B4%EB%B3%B4%ED%97%98%ED%8E%AB%EB%B3%B4%ED%97%98&creative=715856978054&gclid=CjwKCAjw_-3GBhAYEiwAjh9fUOAOLIoRr7kR0cVzVlaBd2fGL9QpVHP-VeOM66OptqdrLHsramvEpBoCWHkQAvD_BwE&campaignid=21770275404&adgroupid=165641182782&gad_source=1&gad_campaignid=21770275404&gbraid=0AAAAAC2sviIaeHim36-hVk52ZQNNyQcDD" target="_blank"
+         class="block p-6 border rounded-lg shadow hover:shadow-md bg-white transition">
+        <h2 class="text-xl font-semibold mb-2">DB손해보험 펫보험</h2>
+        <p class="text-gray-600 text-sm">DB손해보험 다이렉트의 반려동물 의료 보장 서비스.</p>
+      </a>
+
+      <!-- ㅁㄹㅊ -->
+      <a href="https://store.meritzfire.com/pet/direct-lndB01/contract.do#!/01" target="_blank"
+         class="block p-6 border rounded-lg shadow hover:shadow-md bg-white transition">
+        <h2 class="text-xl font-semibold mb-2">메리츠화재 펫보험</h2>
+        <p class="text-gray-600 text-sm">메리츠화재에서 제공하는 반려동물 맞춤형 펫케어 보험.</p>
+      </a>
+
+      <!-- 롯데손해보험 -->
+      <a href="https://www.lotteins.co.kr/product/pet" target="_blank"
+         class="block p-6 border rounded-lg shadow hover:shadow-md bg-white transition">
+        <h2 class="text-xl font-semibold mb-2">롯데손해보험 펫보험</h2>
+        <p class="text-gray-600 text-sm">롯데손보의 반려동물 전용 펫보험 상품.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ✅ 푸터 -->
+  <div id="footer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+</body>
+</html>

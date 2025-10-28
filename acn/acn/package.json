@@ -1,0 +1,32 @@
+{
+  "name": "acn-pet-platform",
+  "version": "1.0.0",
+  "description": "반려동물 케어 플랫폼 ACN - 사료, 간식, 용품 API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pet",
+    "food",
+    "treats",
+    "supplies",
+    "api",
+    "nodejs",
+    "express"
+  ],
+  "author": "ACN Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>반려동물 관리 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ 헤더 자동 삽입 -->
+  <div id="header"></div>
+
+  <!-- ✅ 반려동물 관리 -->
+  <section class="max-w-6xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h1 class="text-2xl font-bold mb-6 text-center">반려동물 관리</h1>
+      
+      <!-- 반려동물 추가 버튼 -->
+      <div class="text-center mb-6">
+        <button id="addPetBtn" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-semibold">
+          + 반려동물 등록
+        </button>
+      </div>
+
+      <!-- 반려동물 목록 -->
+      <div id="petList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 반려동물 카드들이 여기에 동적으로 생성됩니다 -->
+      </div>
+
+      <!-- 반려동물이 없을 때 메시지 -->
+      <div id="emptyMessage" class="text-center py-12 hidden">
+        <div class="text-6xl mb-4">🐾</div>
+        <h3 class="text-lg font-semibold text-gray-600 mb-2">등록된 반려동물이 없습니다</h3>
+        <p class="text-gray-500 mb-4">첫 번째 반려동물을 등록해보세요!</p>
+        <button onclick="addPet()" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+          반려동물 등록하기
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 반려동물 등록/수정 모달 -->
+  <div id="petModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+      <h3 id="modalTitle" class="text-lg font-semibold mb-4">반려동물 등록</h3>
+      
+      <form id="petForm">
+        <!-- 사진 업로드 -->
+        <div class="mb-6 text-center">
+          <div id="photoPreview" class="w-32 h-32 mx-auto mb-3 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center bg-gray-50 overflow-hidden">
+            <span class="text-gray-400 text-4xl">📷</span>
+          </div>
+          <input type="file" id="petPhoto" accept="image/*" class="hidden">
+          <button type="button" onclick="document.getElementById('petPhoto').click()" 
+                  class="text-sm text-blue-600 hover:text-blue-800">사진 선택</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- 이름 -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-1" for="petName">이름 *</label>
+            <input type="text" id="petName" name="petName" placeholder="예: 멍멍이" 
+                   class="w-full border px-3 py-2 rounded" required>
+          </div>
+          
+          <!-- 종류 -->
+          <div>
+            <label class="block text-sm font-medium mb-1" for="petType">종류 *</label>
+            <select id="petType" name="petType" class="w-full border px-3 py-2 rounded" required>
+              <option value="">선택하세요</option>
+              <option value="dog">강아지</option>
+              <option value="cat">고양이</option>
+            </select>
+          </div>
+          
+          <!-- 품종 -->
+          <div>
+            <label class="block text-sm font-medium mb-1" for="breed">품종</label>
+            <input type="text" id="breed" name="breed" placeholder="예: 골든 리트리버" 
+                   class="w-full border px-3 py-2 rounded">
+          </div>
+          
+          <!-- 생년월일 -->
+          <div>
+            <label class="block text-sm font-medium mb-1" for="birthDate">생년월일</label>
+            <input type="date" id="birthDate" name="birthDate" 
+                   class="w-full border px-3 py-2 rounded">
+          </div>
+          
+          <!-- 성별 -->
+          <div>
+            <label class="block text-sm font-medium mb-1" for="gender">성별</label>
+            <select id="gender" name="gender" class="w-full border px-3 py-2 rounded">
+              <option value="">선택하세요</option>
+              <option value="male">수컷</option>
+              <option value="female">암컷</option>
+            </select>
+          </div>
+          
+          <!-- 중성화 여부 -->
+          <div>
+            <label class="block text-sm font-medium mb-1" for="neutered">중성화</label>
+            <select id="neutered" name="neutered" class="w-full border px-3 py-2 rounded">
+              <option value="">선택하세요</option>
+              <option value="yes">완료</option>
+              <option value="no">미완료</option>
+            </select>
+          </div>
+          
+          <!-- 몸무게 -->
+          <div>
+            <label class="block text-sm font-medium mb-1" for="weight">몸무게 (kg)</label>
+            <input type="number" id="weight" name="weight" step="0.1" placeholder="예: 5.5" 
+                   class="w-full border px-3 py-2 rounded">
+          </div>
+        </div>
+        
+        <!-- 특이사항 -->
+        <div class="mt-4">
+          <label class="block text-sm font-medium mb-1" for="notes">특이사항 / 메모</label>
+          <textarea id="notes" name="notes" placeholder="알레르기, 질병, 특별한 주의사항 등" 
+                    class="w-full border px-3 py-2 rounded h-20"></textarea>
+        </div>
+        
+        <div class="flex gap-3 mt-6">
+          <button type="button" id="cancelBtn" class="flex-1 px-4 py-2 border rounded hover:bg-gray-50">
+            취소
+          </button>
+          <button type="submit" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            저장
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 반려동물 상세보기 모달 -->
+  <div id="petDetailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+      <div id="petDetailContent" class="text-center">
+        <!-- 상세 정보가 여기에 동적으로 생성됩니다 -->
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button id="editPetBtn" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          수정
+        </button>
+        <button id="deletePetBtn" class="flex-1 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+          삭제
+        </button>
+        <button id="closeDetailBtn" class="flex-1 px-4 py-2 border rounded hover:bg-gray-50">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 푸터 자동 삽입 -->
+  <div id="footer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Firebase 인증 상태 체크
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "login.html";
+      }
+    });
+
+    // 전역 변수
+    let editingPetId = null;
+    let currentPetForDetail = null;
+
+    // 반려동물 데이터 (로컬스토리지에서 불러오기)
+    let pets = JSON.parse(localStorage.getItem('pets') || '[]');
+
+    // 페이지 초기화
+    function initPage() {
+      updatePetList();
+    }
+
+    // 반려동물 목록 업데이트
+    function updatePetList() {
+      const petList = document.getElementById('petList');
+      const emptyMessage = document.getElementById('emptyMessage');
+      
+      if (pets.length === 0) {
+        petList.innerHTML = '';
+        emptyMessage.classList.remove('hidden');
+        return;
+      }
+
+      emptyMessage.classList.add('hidden');
+      petList.innerHTML = '';
+
+      pets.forEach(pet => {
+        const petCard = document.createElement('div');
+        petCard.className = 'bg-white border rounded-lg shadow hover:shadow-md transition cursor-pointer';
+        petCard.onclick = () => showPetDetail(pet.id);
+        
+        // 나이 계산
+        const age = pet.birthDate ? calculateAge(pet.birthDate) : '알 수 없음';
+        
+        // 성별 아이콘
+        const genderIcon = pet.gender === 'male' ? '♂️' : pet.gender === 'female' ? '♀️' : '';
+        
+        // 종류 아이콘
+        const typeIcon = getTypeIcon(pet.type);
+
+        petCard.innerHTML = `
+          <div class="p-4">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                ${pet.photo ? 
+                  `<img src="${pet.photo}" alt="${pet.name}" class="w-full h-full object-cover">` : 
+                  `<span class="text-2xl">${typeIcon}</span>`
+                }
+              </div>
+              <div class="flex-1">
+                <h3 class="font-semibold text-lg">${pet.name} ${genderIcon}</h3>
+                <p class="text-sm text-gray-600">${getTypeText(pet.type)} ${pet.breed ? `• ${pet.breed}` : ''}</p>
+                <p class="text-sm text-gray-500">${age}</p>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              ${pet.weight ? `<div class="text-gray-600">몸무게: ${pet.weight}kg</div>` : ''}
+              ${pet.neutered ? `<div class="text-gray-600">중성화: ${pet.neutered === 'yes' ? '완료' : '미완료'}</div>` : ''}
+            </div>
+            
+            ${pet.notes ? `<p class="text-xs text-gray-500 mt-2 truncate">${pet.notes}</p>` : ''}
+          </div>
+        `;
+        
+        petList.appendChild(petCard);
+      });
+    }
+
+    // 나이 계산
+    function calculateAge(birthDate) {
+      const birth = new Date(birthDate);
+      const today = new Date();
+      const ageInMonths = (today.getFullYear() - birth.getFullYear()) * 12 + today.getMonth() - birth.getMonth();
+      
+      if (ageInMonths < 12) {
+        return `${ageInMonths}개월`;
+      } else {
+        const years = Math.floor(ageInMonths / 12);
+        const months = ageInMonths % 12;
+        return months > 0 ? `${years}세 ${months}개월` : `${years}세`;
+      }
+    }
+
+    // 종류별 아이콘
+    function getTypeIcon(type) {
+      const icons = {
+        dog: '🐕',
+        cat: '🐱', 
+        rabbit: '🐰',
+        hamster: '🐹',
+        bird: '🐦',
+        fish: '🐠',
+        other: '🐾'
+      };
+      return icons[type] || '🐾';
+    }
+
+    // 종류별 텍스트
+    function getTypeText(type) {
+      const texts = {
+        dog: '강아지',
+        cat: '고양이',
+        rabbit: '토끼', 
+        hamster: '햄스터',
+        bird: '새',
+        fish: '물고기',
+        other: '기타'
+      };
+      return texts[type] || '알 수 없음';
+    }
+
+    // 반려동물 추가
+    function addPet() {
+      editingPetId = null;
+      document.getElementById('modalTitle').textContent = '반려동물 등록';
+      document.getElementById('petForm').reset();
+      document.getElementById('photoPreview').innerHTML = '<span class="text-gray-400 text-4xl">📷</span>';
+      document.getElementById('petModal').classList.remove('hidden');
+      document.getElementById('petModal').classList.add('flex');
+    }
+
+    // 반려동물 수정
+    function editPet(id) {
+      const pet = pets.find(p => p.id === id);
+      if (!pet) return;
+
+      editingPetId = id;
+      document.getElementById('modalTitle').textContent = '반려동물 정보 수정';
+      
+      // 폼에 기존 데이터 채우기
+      document.getElementById('petName').value = pet.name;
+      document.getElementById('petType').value = pet.type || '';
+      document.getElementById('breed').value = pet.breed || '';
+      document.getElementById('birthDate').value = pet.birthDate || '';
+      document.getElementById('gender').value = pet.gender || '';
+      document.getElementById('neutered').value = pet.neutered || '';
+      document.getElementById('weight').value = pet.weight || '';
+      document.getElementById('notes').value = pet.notes || '';
+      
+      // 사진 미리보기
+      const photoPreview = document.getElementById('photoPreview');
+      if (pet.photo) {
+        photoPreview.innerHTML = `<img src="${pet.photo}" alt="${pet.name}" class="w-full h-full object-cover">`;
+      } else {
+        photoPreview.innerHTML = '<span class="text-gray-400 text-4xl">📷</span>';
+      }
+      
+      document.getElementById('petModal').classList.remove('hidden');
+      document.getElementById('petModal').classList.add('flex');
+    }
+
+    // 반려동물 상세보기
+    function showPetDetail(id) {
+      const pet = pets.find(p => p.id === id);
+      if (!pet) return;
+
+      currentPetForDetail = pet;
+      const age = pet.birthDate ? calculateAge(pet.birthDate) : '알 수 없음';
+      const typeIcon = getTypeIcon(pet.type);
+      const genderIcon = pet.gender === 'male' ? '♂️' : pet.gender === 'female' ? '♀️' : '';
+
+      document.getElementById('petDetailContent').innerHTML = `
+        <div class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+          ${pet.photo ? 
+            `<img src="${pet.photo}" alt="${pet.name}" class="w-full h-full object-cover">` : 
+            `<span class="text-4xl">${typeIcon}</span>`
+          }
+        </div>
+        <h2 class="text-xl font-bold mb-2">${pet.name} ${genderIcon}</h2>
+        <div class="text-left space-y-2 max-w-sm mx-auto">
+          <div class="grid grid-cols-2 gap-4">
+            <div><span class="font-medium">종류:</span> ${getTypeText(pet.type)}</div>
+            <div><span class="font-medium">나이:</span> ${age}</div>
+            ${pet.breed ? `<div class="col-span-2"><span class="font-medium">품종:</span> ${pet.breed}</div>` : ''}
+            ${pet.gender ? `<div><span class="font-medium">성별:</span> ${pet.gender === 'male' ? '수컷' : '암컷'}</div>` : ''}
+            ${pet.neutered ? `<div><span class="font-medium">중성화:</span> ${pet.neutered === 'yes' ? '완료' : '미완료'}</div>` : ''}
+            ${pet.weight ? `<div class="col-span-2"><span class="font-medium">몸무게:</span> ${pet.weight}kg</div>` : ''}
+          </div>
+          ${pet.notes ? `<div class="mt-3 pt-3 border-t"><span class="font-medium">특이사항:</span><br>${pet.notes}</div>` : ''}
+        </div>
+      `;
+
+      document.getElementById('petDetailModal').classList.remove('hidden');
+      document.getElementById('petDetailModal').classList.add('flex');
+    }
+
+    // 반려동물 삭제
+    function deletePet(id) {
+      if (confirm('정말로 이 반려동물 정보를 삭제하시겠습니까?')) {
+        pets = pets.filter(p => p.id !== id);
+        localStorage.setItem('pets', JSON.stringify(pets));
+        updatePetList();
+        
+        // 상세보기 모달이 열려있다면 닫기
+        document.getElementById('petDetailModal').classList.add('hidden');
+        document.getElementById('petDetailModal').classList.remove('flex');
+      }
+    }
+
+    // 사진 미리보기
+    document.getElementById('petPhoto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('photoPreview').innerHTML = 
+            `<img src="${e.target.result}" alt="미리보기" class="w-full h-full object-cover">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 이벤트 리스너
+    document.getElementById('addPetBtn').addEventListener('click', addPet);
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      document.getElementById('petModal').classList.add('hidden');
+      document.getElementById('petModal').classList.remove('flex');
+    });
+
+    document.getElementById('editPetBtn').addEventListener('click', () => {
+      if (currentPetForDetail) {
+        document.getElementById('petDetailModal').classList.add('hidden');
+        document.getElementById('petDetailModal').classList.remove('flex');
+        editPet(currentPetForDetail.id);
+      }
+    });
+
+    document.getElementById('deletePetBtn').addEventListener('click', () => {
+      if (currentPetForDetail) {
+        deletePet(currentPetForDetail.id);
+      }
+    });
+
+    document.getElementById('closeDetailBtn').addEventListener('click', () => {
+      document.getElementById('petDetailModal').classList.add('hidden');
+      document.getElementById('petDetailModal').classList.remove('flex');
+    });
+
+    document.getElementById('petForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(e.target);
+      const photoFile = document.getElementById('petPhoto').files[0];
+      
+      const petData = {
+        id: editingPetId || Date.now().toString(),
+        name: formData.get('petName'),
+        type: formData.get('petType'),
+        breed: formData.get('breed'),
+        birthDate: formData.get('birthDate'),
+        gender: formData.get('gender'),
+        neutered: formData.get('neutered'),
+        weight: formData.get('weight'),
+        notes: formData.get('notes'),
+        photo: null
+      };
+
+      // 사진 처리
+      if (photoFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          petData.photo = e.target.result;
+          savePet(petData);
+        };
+        reader.readAsDataURL(photoFile);
+      } else if (editingPetId) {
+        // 수정 시 기존 사진 유지
+        const existingPet = pets.find(p => p.id === editingPetId);
+        petData.photo = existingPet ? existingPet.photo : null;
+        savePet(petData);
+      } else {
+        savePet(petData);
+      }
+    });
+
+    function savePet(petData) {
+      if (editingPetId) {
+        // 수정
+        const index = pets.findIndex(p => p.id === editingPetId);
+        if (index !== -1) {
+          pets[index] = petData;
+        }
+      } else {
+        // 추가
+        pets.push(petData);
+      }
+
+      localStorage.setItem('pets', JSON.stringify(pets));
+      
+      document.getElementById('petModal').classList.add('hidden');
+      document.getElementById('petModal').classList.remove('flex');
+      
+      updatePetList();
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('petModal').addEventListener('click', (e) => {
+      if (e.target.id === 'petModal') {
+        document.getElementById('petModal').classList.add('hidden');
+        document.getElementById('petModal').classList.remove('flex');
+      }
+    });
+
+    document.getElementById('petDetailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'petDetailModal') {
+        document.getElementById('petDetailModal').classList.add('hidden');
+        document.getElementById('petDetailModal').classList.remove('flex');
+      }
+    });
+
+    // 페이지 로드 시 초기화
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+
+
+</body>
+</html>

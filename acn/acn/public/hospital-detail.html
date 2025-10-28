@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>동물병원 상세 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ 헤더 -->
+  <div id="header"></div>
+
+  <!-- ✅ 상세정보 -->
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <h1 id="hospitalName" class="text-3xl font-bold mb-2">병원 이름</h1>
+    <span id="hospitalStatus" class="px-3 py-1 text-sm rounded-full"></span>
+
+    <hr class="my-6"/>
+
+    <!-- 지도 -->
+    <div id="map" class="w-full h-96 rounded shadow"></div>
+
+    <!-- 길찾기 버튼 -->
+    <div class="mt-6 flex gap-3">
+      <a id="directionBtn" 
+         target="_blank" 
+         class="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">
+         🚗 길찾기
+      </a>
+    </div>
+
+    <!-- 상세정보 -->
+    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <h3 class="text-sm font-semibold text-gray-500">전화번호</h3>
+        <p id="hospitalTel" class="text-lg">-</p>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold text-gray-500">주소</h3>
+        <p id="hospitalAddr" class="text-lg">-</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ 푸터 -->
+  <div id="footer"></div>
+
+  <script>
+    let hospitalData = [];
+
+    Papa.parse("hospitals.csv", {
+      download: true,
+      header: true,
+      complete: function(results) {
+        hospitalData = results.data;
+        renderHospital();
+      }
+    });
+
+    function renderHospital() {
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name");
+      const h = hospitalData.find(item => item["FRNM_NM"] === name);
+
+      if (!h) {
+        document.getElementById("hospitalName").textContent = "병원 정보를 찾을 수 없습니다.";
+        return;
+      }
+
+      document.getElementById("hospitalName").textContent = h["FRNM_NM"];
+      document.getElementById("hospitalAddr").textContent = h["RN_ADDR"];
+      document.getElementById("hospitalTel").textContent = h["RPRS_TELNO"] || "-";
+
+      const statusEl = document.getElementById("hospitalStatus");
+      if (!h["OPR_TIME_INFO"] || h["OPR_TIME_INFO"].includes("휴무")) {
+        statusEl.textContent = "휴무";
+        statusEl.className = "px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full";
+      } else {
+        statusEl.textContent = "영업/정상";
+        statusEl.className = "px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full";
+      }
+
+      const lat = parseFloat(h["LA_VLUE"]) || 37.5665;
+      const lon = parseFloat(h["LO_VLUE"]) || 126.9780;
+
+      const map = L.map("map").setView([lat, lon], 15);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19
+      }).addTo(map);
+      L.marker([lat, lon]).addTo(map).bindPopup(h["FRNM_NM"]).openPopup();
+
+      document.getElementById("directionBtn").href =
+        `https://map.kakao.com/link/to/${encodeURIComponent(h["FRNM_NM"])},${lat},${lon}`;
+    }
+  </script>
+</body>
+</html>

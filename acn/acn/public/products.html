@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>반려동물 상품 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ 헤더 -->
+  <div id="header"></div>
+
+  <!-- ✅ Hero 섹션 -->
+  <section class="relative bg-gradient-to-r from-blue-50 to-pink-50">
+    <div class="max-w-7xl mx-auto px-6 py-16">
+      <h1 class="text-4xl font-bold text-center mb-4 text-gray-800" id="pageTitle">
+        반려동물 상품
+      </h1>
+      <p class="text-lg text-center text-gray-600 mb-8">
+        최고의 사료, 간식, 용품을 만나보세요
+      </p>
+    </div>
+  </section>
+
+  <!-- ✅ 필터 및 검색 -->
+  <section class="max-w-7xl mx-auto px-6 py-8">
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <div class="flex flex-col md:flex-row gap-4">
+        <!-- 검색 -->
+        <div class="flex-1">
+          <input id="searchInput" type="text" placeholder="상품명으로 검색..."
+                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                 onkeydown="if(event.key==='Enter'){filterProducts();}">
+        </div>
+
+        <!-- 정렬 -->
+        <select id="sortSelect" onchange="filterProducts()" 
+                class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+          <option value="name">이름순</option>
+          <option value="price-low">낮은 가격순</option>
+          <option value="price-high">높은 가격순</option>
+          <option value="rating">평점순</option>
+        </select>
+
+        <!-- 검색 버튼 -->
+        <button onclick="filterProducts()" 
+                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+          검색
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ 상품 목록 -->
+  <section class="max-w-7xl mx-auto px-6 pb-16">
+    <div id="loading" class="text-center py-16">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <p class="mt-4 text-gray-600">상품을 불러오는 중...</p>
+    </div>
+
+    <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden">
+      <!-- 상품 카드가 여기에 생성됩니다 -->
+    </div>
+
+    <div id="noResults" class="text-center py-16 hidden">
+      <p class="text-gray-500 text-lg">검색 결과가 없습니다.</p>
+    </div>
+  </section>
+
+  <!-- ✅ 푸터 -->
+  <div id="footer"></div>
+
+  <!-- ✅ JavaScript -->
+  <script>
+    let allProducts = [];
+    let filteredProducts = [];
+
+    window.onload = async function () {
+      await loadProducts();
+    };
+
+    // 서버에서 상품 정보 가져오기
+    async function loadProducts() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+        
+        // API URL 구성
+        let apiUrl = 'http://localhost:3000/api/products';
+        if (category) {
+          apiUrl += `?category=${category}`;
+        }
+
+        // 서버에서 데이터 가져오기
+        const response = await fetch(apiUrl);
+        const result = await response.json();
+        
+        if (result.success) {
+          allProducts = result.data;
+        } else {
+          console.error('상품을 불러오는데 실패했습니다:', result.message);
+          // 실패 시 샘플 데이터 사용
+          loadSampleProducts();
+        }
+        
+        // 페이지 제목 변경
+        const pageTitle = document.getElementById('pageTitle');
+        if (category === 'food') pageTitle.textContent = '사료';
+        else if (category === 'treats') pageTitle.textContent = '간식';
+        else if (category === 'supplies') pageTitle.textContent = '용품';
+        else pageTitle.textContent = '전체 상품';
+
+        filteredProducts = allProducts;
+        displayProducts(filteredProducts);
+      } catch (error) {
+        console.error('API 호출 오류:', error);
+        // 오류 발생 시 샘플 데이터 사용
+        loadSampleProducts();
+      }
+    }
+
+    // 샘플 데이터 로드 (API 실패 시 사용)
+    function loadSampleProducts() {
+      const sampleProducts = [
+        { 
+          id: 1, category: 'food', 
+          name: '로얄캐닌 미니 어덜트 건식사료', 
+          price: 45000, 
+          rating: 4.7, 
+          brand: '로얄캐닌', 
+          description: '영양 균형이 완벽한 프리미엄 사료', 
+          image: 'https://images.unsplash.com/photo-1629904853716-f0bc54eea481?auto=format&fit=crop&w=400&q=80', 
+          weight: '3.5kg',
+          link: 'https://link.coupang.com/a/AF0717094' 
+        },
+        { 
+          id: 2, category: 'food', 
+          name: '오리젠 어덜트 독 2kg', 
+          price: 52000, 
+          rating: 4.8, 
+          brand: '오리젠', 
+          description: '천연 원료로 만든 고품질 사료', 
+          image: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=400&q=80', 
+          weight: '2kg',
+          link: 'https://link.coupang.com/a/AF0717094' 
+        },
+        { 
+          id: 3, category: 'food', 
+          name: '프로플랜 포스틱스 퍼피', 
+          price: 38000, 
+          rating: 4.6, 
+          brand: 'Purina', 
+          description: '강아지를 위한 완벽한 성장 사료', 
+          image: 'https://images.unsplash.com/photo-1601758123927-19600d34e252?auto=format&fit=crop&w=400&q=80', 
+          weight: '3kg',
+          link: 'https://link.coupang.com/a/AF0717094' 
+        },
+        { 
+          id: 4, category: 'treats', 
+          name: '그린이즈 육포 100g', 
+          price: 12000, 
+          rating: 4.5, 
+          brand: '그린이즈', 
+          description: '순 닭고기로 만든 건강 간식', 
+          image: 'https://images.unsplash.com/photo-1619983081563-4301e2903c2f?auto=format&fit=crop&w=400&q=80', 
+          weight: '100g',
+          link: 'https://link.coupang.com/a/AF0717094' 
+        },
+        { 
+          id: 5, category: 'treats', 
+          name: '바우와우 소프트바', 
+          price: 15000, 
+          rating: 4.6, 
+          brand: '바우와우', 
+          description: '부드러운 식감의 건강 간식', 
+          image: 'https://images.unsplash.com/photo-1629904853716-f0bc54eea481?auto=format&fit=crop&w=400&q=80', 
+          weight: '200g',
+          link: 'https://link.coupang.com/a/AF0717094' 
+        },
+        { 
+          id: 6, category: 'supplies', 
+          name: 'LED 발광 목걸이', 
+          price: 15000, 
+          rating: 4.3, 
+          brand: '펫라이트', 
+          description: '야간 산책용 LED 목걸이', 
+          image: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=400&q=80', 
+          size: '조절가능',
+          link: 'https://link.coupang.com/a/AF0717094' 
+        },
+        { 
+          id: 7, category: 'supplies', 
+          name: '튼튼한 강아지 장난감', 
+          price: 18000, 
+          rating: 4.4, 
+          brand: '퓨리펫', 
+          description: '견고한 고무 재질의 안전한 장난감', 
+          image: 'https://images.unsplash.com/photo-1601758123927-19600d34e252?auto=format&fit=crop&w=400&q=80', 
+          size: 'S/M/L',
+          link: 'https://link.coupang.com/a/AF0717094' 
+        },
+        { 
+          id: 8, category: 'supplies', 
+          name: '스마트 피이드 자동급식기', 
+          price: 75000, 
+          rating: 4.7, 
+          brand: '펫슬림', 
+          description: '자동으로 사료를 제공하는 스마트 급식기', 
+          image: 'https://images.unsplash.com/photo-1619983081563-4301e2903c2f?auto=format&fit=crop&w=400&q=80', 
+          weight: '2.5L',
+          link: 'https://link.coupang.com/a/AF0717094' 
+        }
+      ];
+
+      allProducts = sampleProducts;
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const category = urlParams.get('category');
+
+      // 페이지 제목 변경
+      const pageTitle = document.getElementById('pageTitle');
+      if (category === 'food') pageTitle.textContent = '사료';
+      else if (category === 'treats') pageTitle.textContent = '간식';
+      else if (category === 'supplies') pageTitle.textContent = '용품';
+      else pageTitle.textContent = '전체 상품';
+
+      if (category && ['food', 'treats', 'supplies'].includes(category)) {
+        filteredProducts = allProducts.filter(p => p.category === category);
+      } else {
+        filteredProducts = allProducts;
+      }
+
+      displayProducts(filteredProducts);
+    }
+
+    function filterProducts() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const sortBy = document.getElementById('sortSelect').value;
+
+      let filtered = filteredProducts.filter(p =>
+        p.name.toLowerCase().includes(searchTerm) ||
+        p.brand.toLowerCase().includes(searchTerm) ||
+        p.description.toLowerCase().includes(searchTerm)
+      );
+
+      filtered.sort((a, b) => {
+        switch (sortBy) {
+          case 'name': return a.name.localeCompare(b.name);
+          case 'price-low': return a.price - b.price;
+          case 'price-high': return b.price - a.price;
+          case 'rating': return b.rating - a.rating;
+          default: return 0;
+        }
+      });
+
+      displayProducts(filtered);
+    }
+
+    function displayProducts(products) {
+      const grid = document.getElementById('productGrid');
+      const loading = document.getElementById('loading');
+      const noResults = document.getElementById('noResults');
+      loading.classList.add('hidden');
+
+      if (!products.length) {
+        grid.classList.add('hidden');
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      noResults.classList.add('hidden');
+      grid.classList.remove('hidden');
+
+      grid.innerHTML = products.map(product => `
+        <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer" onclick="goToCoupang('${product.coupangLink || product.link || 'https://link.coupang.com/a/AF0717094'}')">
+          <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-yellow-400 text-sm">${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}</span>
+              <span class="text-xs text-gray-500">(${product.rating})</span>
+            </div>
+            <h3 class="font-semibold text-lg mb-2">${product.name}</h3>
+            <p class="text-gray-600 text-sm mb-2 line-clamp-2">${product.description}</p>
+            ${product.brand ? `<p class="text-xs text-gray-500 mb-2">${product.brand}</p>` : ''}
+            <div class="flex items-center justify-between">
+              <span class="text-xl font-bold text-blue-600">${product.price.toLocaleString()}원</span>
+              <a href="${product.coupangLink || product.link || 'https://link.coupang.com/a/AF0717094'}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition">
+                구매하기
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function viewProductDetail(id) {
+      const product = allProducts.find(p => p.id === id);
+      if (product) {
+        localStorage.setItem('selectedProduct', JSON.stringify(product));
+        window.location.href = `product-detail.html?id=${id}`;
+      } else {
+        alert('상품 정보를 찾을 수 없습니다.');
+      }
+    }
+
+    function goToCoupang(link) {
+      window.open(link, '_blank', 'noopener,noreferrer');
+    }
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</body>
+</html>

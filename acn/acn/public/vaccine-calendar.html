@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>예방접종 스케줄 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ 헤더 자동 삽입 -->
+  <div id="header"></div>
+
+  <!-- ✅ 예방접종 스케줄 달력 -->
+  <section class="max-w-6xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h1 class="text-2xl font-bold mb-6 text-center">예방접종 스케줄 관리</h1>
+      
+      <!-- 달력 컨트롤 -->
+      <div class="flex justify-between items-center mb-6">
+        <button id="prevMonth" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          ◀ 이전
+        </button>
+        <h2 id="currentMonth" class="text-xl font-semibold"></h2>
+        <button id="nextMonth" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          다음 ▶
+        </button>
+      </div>
+
+      <!-- 달력 그리드 -->
+      <div class="grid grid-cols-7 gap-1 mb-4">
+        <div class="p-2 text-center font-semibold text-gray-600">일</div>
+        <div class="p-2 text-center font-semibold text-gray-600">월</div>
+        <div class="p-2 text-center font-semibold text-gray-600">화</div>
+        <div class="p-2 text-center font-semibold text-gray-600">수</div>
+        <div class="p-2 text-center font-semibold text-gray-600">목</div>
+        <div class="p-2 text-center font-semibold text-gray-600">금</div>
+        <div class="p-2 text-center font-semibold text-gray-600">토</div>
+      </div>
+      
+      <div id="calendar" class="grid grid-cols-7 gap-1 mb-6">
+        <!-- 달력 날짜들이 여기에 동적으로 생성됩니다 -->
+      </div>
+
+      <!-- 예방접종 추가 버튼 -->
+      <div class="text-center mb-6">
+        <button id="addVaccineBtn" class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 font-semibold">
+          + 예방접종 일정 추가
+        </button>
+      </div>
+
+      <!-- 예방접종 목록 -->
+      <div class="border-t pt-6">
+        <h3 class="text-lg font-semibold mb-4">예정된 예방접종</h3>
+        <div id="vaccineList" class="space-y-3">
+          <!-- 예방접종 목록이 여기에 동적으로 생성됩니다 -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 예방접종 추가/수정 모달 -->
+  <div id="vaccineModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+      <h3 id="modalTitle" class="text-lg font-semibold mb-4">예방접종 일정 추가</h3>
+      
+      <form id="vaccineForm">
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1" for="vaccineName">예방접종명</label>
+          <input type="text" id="vaccineName" name="vaccineName" placeholder="예: 종합백신, 광견병 등" 
+                 class="w-full border px-3 py-2 rounded" required>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1" for="petName">반려동물</label>
+          <select id="petName" name="petName" class="w-full border px-3 py-2 rounded" required>
+            <option value="">반려동물을 선택하세요</option>
+            <!-- 등록된 반려동물 목록이 여기에 동적으로 추가됩니다 -->
+          </select>
+          <p class="text-xs text-gray-500 mt-1">
+            반려동물이 없다면 
+            <a href="pet-management.html" class="text-blue-600 hover:underline">여기서 먼저 등록</a>해주세요.
+          </p>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1" for="vaccineDate">접종 예정일</label>
+          <input type="date" id="vaccineDate" name="vaccineDate" 
+                 class="w-full border px-3 py-2 rounded" required>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1" for="vaccineTime">접종 시간</label>
+          <input type="time" id="vaccineTime" name="vaccineTime" 
+                 class="w-full border px-3 py-2 rounded">
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1" for="hospital">병원명</label>
+          <input type="text" id="hospital" name="hospital" placeholder="예: ○○동물병원" 
+                 class="w-full border px-3 py-2 rounded">
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1" for="notes">메모</label>
+          <textarea id="notes" name="notes" placeholder="특이사항이나 주의사항을 입력하세요" 
+                    class="w-full border px-3 py-2 rounded h-20"></textarea>
+        </div>
+        
+        <div class="flex gap-3">
+          <button type="button" id="cancelBtn" class="flex-1 px-4 py-2 border rounded hover:bg-gray-50">
+            취소
+          </button>
+          <button type="submit" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            저장
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 푸터 자동 삽입 -->
+  <div id="footer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Firebase 인증 상태 체크
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "login.html";
+      }
+    });
+
+    // 전역 변수
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+    let editingVaccineId = null;
+
+    // 예방접종 데이터 (로컬스토리지에서 불러오기)
+    let vaccines = JSON.parse(localStorage.getItem('vaccines') || '[]');
+
+    // 달력 초기화
+    function initCalendar() {
+      loadPetOptions();
+      updateCalendar();
+      updateVaccineList();
+    }
+
+    // 등록된 반려동물 목록 불러오기
+    function loadPetOptions() {
+      const pets = JSON.parse(localStorage.getItem('pets') || '[]');
+      const petSelect = document.getElementById('petName');
+      
+      // 기존 옵션들 제거 (첫 번째 옵션 제외)
+      while (petSelect.children.length > 1) {
+        petSelect.removeChild(petSelect.lastChild);
+      }
+      
+      // 등록된 반려동물들 추가
+      pets.forEach(pet => {
+        const option = document.createElement('option');
+        option.value = pet.name;
+        option.textContent = `${pet.name} (${getTypeText(pet.type)})`;
+        petSelect.appendChild(option);
+      });
+    }
+
+    // 종류별 텍스트 (반려동물 관리 페이지와 동일)
+    function getTypeText(type) {
+      const texts = {
+        dog: '강아지',
+        cat: '고양이',
+        rabbit: '토끼', 
+        hamster: '햄스터',
+        bird: '새',
+        fish: '물고기',
+        other: '기타'
+      };
+      return texts[type] || '알 수 없음';
+    }
+
+    // 달력 업데이트
+    function updateCalendar() {
+      const monthNames = [
+        "1월", "2월", "3월", "4월", "5월", "6월",
+        "7월", "8월", "9월", "10월", "11월", "12월"
+      ];
+      
+      document.getElementById('currentMonth').textContent = 
+        `${currentYear}년 ${monthNames[currentMonth]}`;
+
+      const calendar = document.getElementById('calendar');
+      calendar.innerHTML = '';
+
+      // 해당 월의 첫 번째 날과 마지막 날
+      const firstDay = new Date(currentYear, currentMonth, 1);
+      const lastDay = new Date(currentYear, currentMonth + 1, 0);
+      const startDate = new Date(firstDay);
+      startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+      // 6주치 달력 생성 (42일)
+      for (let i = 0; i < 42; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        
+        const dayElement = document.createElement('div');
+        dayElement.className = 'p-2 text-center border min-h-[60px] relative';
+        
+        // 다른 월의 날짜는 회색으로 표시
+        if (date.getMonth() !== currentMonth) {
+          dayElement.classList.add('text-gray-400', 'bg-gray-50');
+        }
+        
+        // 오늘 날짜 강조
+        const today = new Date();
+        if (date.toDateString() === today.toDateString()) {
+          dayElement.classList.add('bg-blue-100', 'font-semibold');
+        }
+        
+        dayElement.innerHTML = `
+          <div class="text-sm">${date.getDate()}</div>
+          <div class="text-xs mt-1 space-y-1" id="vaccines-${date.toDateString()}"></div>
+        `;
+        
+        calendar.appendChild(dayElement);
+      }
+
+      // 예방접종 일정 표시
+      displayVaccinesOnCalendar();
+    }
+
+    // 달력에 예방접종 표시
+    function displayVaccinesOnCalendar() {
+      vaccines.forEach(vaccine => {
+        const vaccineDate = new Date(vaccine.date);
+        const dateString = vaccineDate.toDateString();
+        const container = document.getElementById(`vaccines-${dateString}`);
+        
+        if (container) {
+          const vaccineElement = document.createElement('div');
+          vaccineElement.className = 'bg-red-100 text-red-800 text-xs p-1 rounded truncate cursor-pointer';
+          vaccineElement.title = `${vaccine.petName} - ${vaccine.name}`;
+          vaccineElement.textContent = vaccine.name;
+          vaccineElement.onclick = () => editVaccine(vaccine.id);
+          container.appendChild(vaccineElement);
+        }
+      });
+    }
+
+    // 예방접종 목록 업데이트
+    function updateVaccineList() {
+      const vaccineList = document.getElementById('vaccineList');
+      vaccineList.innerHTML = '';
+
+      if (vaccines.length === 0) {
+        vaccineList.innerHTML = '<p class="text-gray-500 text-center py-4">등록된 예방접종 일정이 없습니다.</p>';
+        return;
+      }
+
+      // 날짜순으로 정렬
+      const sortedVaccines = [...vaccines].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      sortedVaccines.forEach(vaccine => {
+        const vaccineElement = document.createElement('div');
+        vaccineElement.className = 'border rounded-lg p-4 hover:bg-gray-50';
+        
+        const vaccineDate = new Date(vaccine.date);
+        const isPast = vaccineDate < new Date();
+        const isToday = vaccineDate.toDateString() === new Date().toDateString();
+        
+        let statusClass = '';
+        let statusText = '';
+        
+        if (isPast) {
+          statusClass = 'bg-gray-100 text-gray-600';
+          statusText = '완료';
+        } else if (isToday) {
+          statusClass = 'bg-red-100 text-red-600';
+          statusText = '오늘';
+        } else {
+          statusClass = 'bg-blue-100 text-blue-600';
+          statusText = '예정';
+        }
+
+        vaccineElement.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h4 class="font-semibold">${vaccine.name}</h4>
+                <span class="px-2 py-1 text-xs rounded-full ${statusClass}">${statusText}</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-1">🐾 ${vaccine.petName}</p>
+              <p class="text-sm text-gray-600 mb-1">📅 ${vaccineDate.toLocaleDateString('ko-KR')} ${vaccine.time || ''}</p>
+              ${vaccine.hospital ? `<p class="text-sm text-gray-600 mb-1">🏥 ${vaccine.hospital}</p>` : ''}
+              ${vaccine.notes ? `<p class="text-sm text-gray-500">${vaccine.notes}</p>` : ''}
+            </div>
+            <div class="flex gap-2 ml-4">
+              <button onclick="editVaccine('${vaccine.id}')" class="text-blue-600 hover:text-blue-800 text-sm">수정</button>
+              <button onclick="deleteVaccine('${vaccine.id}')" class="text-red-600 hover:text-red-800 text-sm">삭제</button>
+            </div>
+          </div>
+        `;
+        
+        vaccineList.appendChild(vaccineElement);
+      });
+    }
+
+    // 예방접종 추가
+    function addVaccine() {
+      editingVaccineId = null;
+      document.getElementById('modalTitle').textContent = '예방접종 일정 추가';
+      document.getElementById('vaccineForm').reset();
+      loadPetOptions(); // 반려동물 목록 다시 로드
+      document.getElementById('vaccineModal').classList.remove('hidden');
+      document.getElementById('vaccineModal').classList.add('flex');
+    }
+
+    // 예방접종 수정
+    function editVaccine(id) {
+      const vaccine = vaccines.find(v => v.id === id);
+      if (!vaccine) return;
+
+      editingVaccineId = id;
+      document.getElementById('modalTitle').textContent = '예방접종 일정 수정';
+      
+      loadPetOptions(); // 반려동물 목록 다시 로드
+      
+      // 폼에 기존 데이터 채우기
+      document.getElementById('vaccineName').value = vaccine.name;
+      document.getElementById('petName').value = vaccine.petName;
+      document.getElementById('vaccineDate').value = vaccine.date;
+      document.getElementById('vaccineTime').value = vaccine.time || '';
+      document.getElementById('hospital').value = vaccine.hospital || '';
+      document.getElementById('notes').value = vaccine.notes || '';
+      
+      document.getElementById('vaccineModal').classList.remove('hidden');
+      document.getElementById('vaccineModal').classList.add('flex');
+    }
+
+    // 예방접종 삭제
+    function deleteVaccine(id) {
+      if (confirm('정말로 이 예방접종 일정을 삭제하시겠습니까?')) {
+        vaccines = vaccines.filter(v => v.id !== id);
+        localStorage.setItem('vaccines', JSON.stringify(vaccines));
+        updateCalendar();
+        updateVaccineList();
+      }
+    }
+
+    // 이벤트 리스너
+    document.getElementById('prevMonth').addEventListener('click', () => {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      updateCalendar();
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      updateCalendar();
+    });
+
+    document.getElementById('addVaccineBtn').addEventListener('click', addVaccine);
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      document.getElementById('vaccineModal').classList.add('hidden');
+      document.getElementById('vaccineModal').classList.remove('flex');
+    });
+
+    document.getElementById('vaccineForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(e.target);
+      const vaccineData = {
+        id: editingVaccineId || Date.now().toString(),
+        name: formData.get('vaccineName'),
+        petName: formData.get('petName'),
+        date: formData.get('vaccineDate'),
+        time: formData.get('vaccineTime'),
+        hospital: formData.get('hospital'),
+        notes: formData.get('notes')
+      };
+
+      if (editingVaccineId) {
+        // 수정
+        const index = vaccines.findIndex(v => v.id === editingVaccineId);
+        if (index !== -1) {
+          vaccines[index] = vaccineData;
+        }
+      } else {
+        // 추가
+        vaccines.push(vaccineData);
+      }
+
+      localStorage.setItem('vaccines', JSON.stringify(vaccines));
+      
+      document.getElementById('vaccineModal').classList.add('hidden');
+      document.getElementById('vaccineModal').classList.remove('flex');
+      
+      updateCalendar();
+      updateVaccineList();
+    });
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('vaccineModal').addEventListener('click', (e) => {
+      if (e.target.id === 'vaccineModal') {
+        document.getElementById('vaccineModal').classList.add('hidden');
+        document.getElementById('vaccineModal').classList.remove('flex');
+      }
+    });
+
+    // 페이지 로드 시 달력 초기화
+    document.addEventListener('DOMContentLoaded', initCalendar);
+  </script>
+
+
+</body>
+</html>
+

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>동물병원 찾기 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ 헤더 -->
+  <div id="header"></div>
+
+  <!-- ✅ Hero 섹션 (강아지 이미지 배경) -->
+  <section class="relative bg-gray-800 text-white">
+    <!-- <img src="강아지이미지.jpg" alt="강아지" 
+         class="absolute inset-0 w-full h-full object-cover opacity-70">-->
+    <div class="relative max-w-4xl mx-auto px-6 py-20 text-center"> 
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow">
+        우리 동네 동물병원, 쉽고 빠르게 찾기
+      </h1>
+      <p class="text-lg md:text-xl mb-8">
+        병원 이름이나 지역명으로 바로 검색해보세요.
+      </p>
+      <div class="flex justify-center gap-2">
+        <input id="searchInput" type="text" placeholder="예: 강남구, 굿케어동물병원"
+          class="w-full sm:w-[28rem] px-4 py-3 rounded-full border outline-none text-gray-800"
+          onkeydown="if(event.key==='Enter'){searchHospitals();}"/>
+        <button onclick="searchHospitals()"
+          class="px-6 py-3 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold">
+          검색
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ 검색 결과 -->
+  <section class="max-w-4xl mx-auto px-4 py-10">
+    <h2 id="resultTitle" class="text-lg font-semibold mb-4 hidden"></h2>
+    <div id="hospitalList" class="space-y-4"></div>
+    <div id="emptyState" class="hidden text-center text-gray-500 mt-6">검색 결과가 없습니다.</div>
+  </section>
+
+  <!-- ✅ 푸터 -->
+  <div id="footer"></div>
+
+  <script>
+    let hospitalData = [];
+
+    // CSV 불러오기
+    Papa.parse("hospitals.csv", {
+      download: true,
+      header: true,
+      complete: function(results) {
+        hospitalData = results.data;
+      }
+    });
+
+    function searchHospitals() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const filtered = hospitalData.filter(h => {
+        const name = (h["FRNM_NM"] || "").toLowerCase();
+        const addr = (h["RN_ADDR"] || "").toLowerCase();
+        return name.includes(q) || addr.includes(q);
+      });
+
+      const list = document.getElementById("hospitalList");
+      const empty = document.getElementById("emptyState");
+      const title = document.getElementById("resultTitle");
+
+      if (!filtered.length) {
+        list.innerHTML = "";
+        empty.classList.remove("hidden");
+        title.classList.add("hidden");
+        return;
+      }
+
+      empty.classList.add("hidden");
+      title.textContent = `'${q}' 검색 결과 (총 ${filtered.length}건)`;
+      title.classList.remove("hidden");
+
+      list.innerHTML = filtered.map((h) => {
+        const status = getHospitalStatus(h["OPR_TIME_INFO"]);
+
+        return `
+          <div class="p-5 bg-white border rounded-lg shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-lg font-bold">${highlightKeyword(h["FRNM_NM"] || "", q)}</h3>
+                <p class="text-sm text-gray-600 mt-1">
+                  ${highlightKeyword(h["RN_ADDR"] || "", q)}
+                </p>
+                <p class="text-sm text-gray-600 mt-1">☎ ${h["RPRS_TELNO"] || "-"}</p>
+              </div>
+              <span class="px-3 py-1 text-sm ${status.bg} ${status.text} rounded-full">${status.label}</span>
+            </div>
+            <!-- ✅ 병원 이름을 URL로 전달 -->
+            <a href="hospital-detail.html?name=${encodeURIComponent(h["FRNM_NM"])}" 
+               class="text-blue-600 underline block mt-2">자세히 보기</a>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // ✅ 영업 상태 체크
+    function getHospitalStatus(oprTime) {
+      if (!oprTime || oprTime.trim() === "" || oprTime.includes("휴무")) {
+        return { label: "휴무", bg: "bg-red-100", text: "text-red-700" };
+      }
+      return { label: "영업/정상", bg: "bg-green-100", text: "text-green-700" };
+    }
+
+    // ✅ 검색어 하이라이트
+    function highlightKeyword(text, keyword) {
+      if (!keyword) return text;
+      const regex = new RegExp(`(${keyword})`, "gi");
+      return text.replace(regex, `<span class="bg-yellow-200 font-semibold">$1</span>`);
+    }
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</body>
+</html>

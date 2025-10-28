@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>마이페이지 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-white text-gray-800">
+
+  <div id="header"></div>
+
+  <section class="max-w-4xl mx-auto px-6 py-8">
+      <!-- 페이지 제목 -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">마이페이지</h1>
+        <p class="text-gray-600">반려동물과 함께하는 행복한 시간을 관리하세요</p>
+      </div>
+
+      <!-- 로그인 체크 -->
+      <div id="loginRequired" class="hidden text-center py-16">
+        <div class="text-red-500 text-6xl mb-4">🔒</div>
+        <h2 class="text-2xl font-bold mb-4 text-gray-600">로그인이 필요합니다</h2>
+        <p class="text-gray-500 mb-8">마이페이지를 이용하려면 먼저 로그인해주세요.</p>
+        <a href="login.html" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+          로그인하기
+        </a>
+      </div>
+
+      <!-- 마이페이지 컨텐츠 -->
+      <div id="mypageContent" class="hidden">
+        <!-- 사용자 정보 카드 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+              <span class="text-2xl">👤</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-gray-800" id="userName">사용자님</h2>
+              <p class="text-gray-600" id="userEmail">user@example.com</p>
+            </div>
+            <div class="ml-auto">
+              <a href="edit-profile.html" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                회원정보 수정
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 메뉴 그리드 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- 주문 내역 -->
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-xl">📦</span>
+              </div>
+              <h3 class="text-lg font-semibold">주문 내역</h3>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">최근 주문한 상품들을 확인하세요</p>
+            <button onclick="viewOrders()" class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-blue-600 hover:text-white transition">
+              주문 내역 보기
+            </button>
+          </div>
+
+          <!-- 장바구니 -->
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-xl">🛒</span>
+              </div>
+              <h3 class="text-lg font-semibold">장바구니</h3>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">담은 상품을 확인하고 주문하세요</p>
+            <button onclick="window.location.href='cart.html'" class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-blue-600 hover:text-white transition">
+              장바구니 보기
+            </button>
+          </div>
+
+          <!-- 관심 상품 -->
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-xl">❤️</span>
+              </div>
+              <h3 class="text-lg font-semibold">관심 상품</h3>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">찜한 상품들을 관리하세요</p>
+            <button onclick="viewWishlist()" class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-blue-600 hover:text-white transition">
+              관심 상품 보기
+            </button>
+          </div>
+
+          <!-- 반려동물 관리 -->
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-xl">🐕</span>
+              </div>
+              <h3 class="text-lg font-semibold">반려동물 관리</h3>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">우리 아이들의 정보를 관리하세요</p>
+            <button onclick="managePets()" class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-blue-600 hover:text-white transition">
+              반려동물 관리
+            </button>
+          </div>
+
+          <!-- 예방접종 캘린더 -->
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-xl">💉</span>
+              </div>
+              <h3 class="text-lg font-semibold">예방접종 캘린더</h3>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">접종 일정을 관리하세요</p>
+            <button onclick="window.location.href='vaccine-calendar.html'" class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-blue-600 hover:text-white transition">
+              캘린더 보기
+            </button>
+          </div>
+
+          <!-- 고객센터 -->
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                <span class="text-xl">📞</span>
+              </div>
+              <h3 class="text-lg font-semibold">고객센터</h3>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">문의사항이나 도움이 필요하신가요?</p>
+            <button onclick="contactSupport()" class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-blue-600 hover:text-white transition">
+              문의하기
+            </button>
+          </div>
+        </div>
+
+        <!-- 최근 활동 -->
+        <div class="mt-8 bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold mb-4">최근 활동</h3>
+          <div id="recentActivity" class="space-y-3">
+            <div class="flex items-center text-sm text-gray-600">
+              <span class="mr-2">🛒</span>
+              <span>장바구니에 상품을 추가했습니다</span>
+              <span class="ml-auto text-gray-400">방금 전</span>
+            </div>
+            <div class="flex items-center text-sm text-gray-600">
+              <span class="mr-2">👤</span>
+              <span>회원가입을 완료했습니다</span>
+              <span class="ml-auto text-gray-400">1일 전</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+
+<script>
+  // 🔥 여기에 본인의 Firebase 프로젝트 설정 코드를 붙여넣으세요.
+  const firebaseConfig = {    apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ" };
+  
+  // Firebase 앱 초기화
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore(); // Firestore 사용을 위해 추가
+
+  // 사용할 HTML 요소들을 미리 변수에 담아두기
+  const loginRequiredEl = document.getElementById('loginRequired');
+  const mypageContentEl = document.getElementById('mypageContent');
+  const userNameEl = document.getElementById('userName');
+  const userEmailEl = document.getElementById('userEmail');
+
+  // ✅ Firebase 인증 상태 감지
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      // ⭐ 사용자가 로그인한 경우
+      
+      // 1. 보여줄 것은 보여주고 숨길 것은 숨기기 (스위치 켜기!)
+      loginRequiredEl.classList.add('hidden');
+      mypageContentEl.classList.remove('hidden');
+
+      // 2. 이메일 정보 표시 (Authentication에서 가져옴)
+      userEmailEl.textContent = user.email;
+
+      // 3. 이름 정보 표시 (Firestore DB에서 가져옴)
+      db.collection('users').doc(user.uid).get().then(doc => {
+        if (doc.exists) {
+          // Firestore에 저장된 이름이 있으면 그 이름을, 없으면 이메일 앞부분을 이름으로 사용
+          userNameEl.textContent = doc.data().name || user.email.split('@')[0];
+        } else {
+          userNameEl.textContent = user.email.split('@')[0];
+        }
+      });
+
+    } else {
+      // ⭐ 사용자가 로그인하지 않은 경우
+      
+      // 1. '로그인 필요' 화면 보여주기 (스위치 켜기!)
+      loginRequiredEl.classList.remove('hidden');
+      mypageContentEl.classList.add('hidden');
+    }
+  });
+</script>
+
+<script>
+function managePets() {
+  window.location.href = 'pet-management.html';
+}
+</script>
+
+  <div id="footer"></div>
+
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACN | 반려동물 케어 플랫폼</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ 헤더 -->
+  <div id="header"></div>
+
+  <!-- ✅ Hero 섹션 -->
+  <section class="relative bg-gradient-to-r from-blue-50 to-pink-50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-20 flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2 space-y-6">
+        <h1 class="text-4xl font-bold leading-tight text-gray-800">
+          반려동물을 위한<br> 최고의 선택, <span class="text-blue-600">ACN</span>
+        </h1>
+        <p class="text-gray-600 text-lg">
+          동물병원 조회부터 사료, 간식, 용품, 보험까지<br>
+          반려동물의 모든 것을 한 곳에서.
+        </p>
+        <div class="flex gap-3">
+          <a href="hospital.html"
+             class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+             동물병원 찾기
+          </a>
+          <a href="insurance.html"
+             class="px-6 py-3 bg-white border rounded-lg shadow hover:bg-gray-50 transition">
+             펫보험 안내
+          </a>
+        </div>
+      </div>
+      <div class="md:w-1/2 mt-10 md:mt-0 flex justify-center">
+        <img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=600&q=80"
+             alt="강아지와 고양이"
+             class="rounded-2xl shadow-lg w-80 md:w-full object-cover">
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ 카테고리 메뉴 -->
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <h2 class="text-2xl font-bold text-center mb-10">카테고리</h2>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+      <a href="hospital.html" class="p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+        🏥<br>동물병원찾기
+      </a>
+      <a href="products.html?category=food" class="p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+        🍖<br>사료
+      </a>
+      <a href="products.html?category=treats" class="p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+        🦴<br>간식
+      </a>
+      <a href="products.html?category=supplies" class="p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+        🛒<br>용품
+      </a>
+      <a href="insurance.html" class="p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+        💳<br>펫보험
+      </a>
+    </div>
+  </section>
+
+  <!-- ✅ 추천 서비스/상품 -->
+  <section class="bg-white py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl font-bold text-center mb-10">추천 서비스</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="products.html?category=food" class="border rounded-lg shadow hover:shadow-md overflow-hidden block">
+          <img src="hero-food.png" 
+               alt="사료"
+               class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">프리미엄 사료</h3>
+            <p class="text-gray-600 text-sm mt-2">영양 가득한 맞춤형 사료 추천</p>
+          </div>
+        </a>
+        <a href="products.html?category=treats" class="border rounded-lg shadow hover:shadow-md overflow-hidden block">
+          <img src="hero-treats.png"
+               alt="건강 간식"
+               class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">건강 간식</h3>
+            <p class="text-gray-600 text-sm mt-2">아이들이 좋아하는 천연 원료 간식</p>
+          </div>
+        </a>
+        <a href="insurance.html" class="border rounded-lg shadow hover:shadow-md overflow-hidden block">
+          <img src="hero-insurance.png"
+               alt="펫보험"
+               class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">펫보험 비교</h3>
+            <p class="text-gray-600 text-sm mt-2">다양한 보험사 상품 확인 및 가입</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+ <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    // 🔥 여기에 본인의 Firebase 프로젝트 설정 코드를 붙여넣으세요.
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+
+    // Firebase 앱 초기화
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+  </script>
+  
+
+  <!-- ✅ 푸터 -->
+  <div id="footer"></div>
+
+</body>
+</html>
