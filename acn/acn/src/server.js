@@ -6,6 +6,8 @@ const compression = require("compression");
 const helmet = require("helmet");
 // 맨 위 다른 require 아래에 추가
 const products = require("./data/products");
+const filtered = Array.isArray(items?.data) ? items.data : (items?.records || []);
+
 
 
 const app = express();
@@ -53,6 +55,51 @@ app.use(express.static(publicPath, {
 /* 7) 헬스 체크 (Render에서 상태확인용) */
 app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
 
+
+
+/* 유기동물 보호 현황 프록시 */
+// ⭐ server.js의 기존 /api/abandoned-animals 라우트 통째로 교체
+app.get("/api/abandoned-animals", async (req, res) => {
+  try {
+    const page = Number(req.query.page || 1);
+    const size = Number(req.query.size || 12);
+
+    // Render 대시보드 > Environment 에 ACN_ABANDONED_API_KEY 등록 권장
+    const apiKey = process.env.ACN_ABANDONED_API_KEY || "3f8e0f840aa246f795508b324d420499";
+
+    // 공공데이터 포털 정식 엔드포인트
+    const url = new URL("https://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic");
+    url.searchParams.set("serviceKey", apiKey);
+    url.searchParams.set("_type", "json");
+    url.searchParams.set("pageNo", String(page));
+    url.searchParams.set("numOfRows", String(size));
+    // 필요 시 지역 필터: url.searchParams.set("upr_cd", "6110000"); url.searchParams.set("org_cd", "...");
+
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      return res.status(502).json({ success: false, message: "Upstream API error" });
+    }
+    const json = await resp.json();
+
+    const body = json?.response?.body || {};
+    const items = body?.items?.item || [];         // ← 실제 데이터 배열
+    const totalCount = body?.totalCount || 0;
+
+    // 프론트 render()가 기대하는 형태: { data: [...] }
+    res.json({
+      success: true,
+      data: {
+        data: Array.isArray(items) ? items : (items ? [items] : []), // 단건도 배열화
+        totalCount,
+        page,
+        size
+      }
+    });
+  } catch (e) {
+    console.error("❌ abandoned-animals proxy error:", e);
+    res.status(500).json({ success: false, message: "유기동물 데이터를 불러올 수 없습니다." });
+  }
+});
 
 
 /* 모든 상품 조회 */
