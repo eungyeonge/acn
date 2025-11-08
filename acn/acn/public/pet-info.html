@@ -18,11 +18,11 @@
     </div>
 
     <!-- 탭 메뉴 -->
-      <div class="flex flex-wrap gap-2 mb-6 border-b"></div>
-      <button onclick="showTab('health')" id="tab-health" class="px-4 py-2 font-semibold text-gray-600 hover:text-blue-600">
+    <div class="flex flex-wrap gap-2 mb-6 border-b">
+      <button onclick="showTab('health')" id="tab-health" class="px-4 py-2 font-semibold border-b-2 border-blue-600 text-blue-600">
         🏥 건강 관리 체크리스트
       </button>
-      <button onclick="showTab('vaccine')" id="tab-vaccine" class="px-4 py-2 font-semibold border-b-2 border-blue-600 text-blue-600">
+      <button onclick="showTab('vaccine')" id="tab-vaccine" class="px-4 py-2 font-semibold text-gray-600 hover:text-blue-600">
         💉 예방접종 일정표
       </button>
       <button onclick="showTab('annual')" id="tab-annual" class="px-4 py-2 font-semibold text-gray-600 hover:text-blue-600">
@@ -31,7 +31,7 @@
     </div>
 
     <!-- 건강 관리 체크리스트 -->
-    <div id="content-health" class="tab-content hidden">
+    <div id="content-health" class="tab-content">
       <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
         <h2 class="text-2xl font-bold mb-4">반려동물 선택</h2>
         <div class="flex gap-4">
@@ -157,7 +157,7 @@
     </div>
 
     <!-- 예방접종 일정표 -->
-    <div id="content-vaccine" class="tab-content">
+    <div id="content-vaccine" class="tab-content hidden">
       <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
         <h2 class="text-2xl font-bold mb-4">강아지 예방접종 일정표</h2>
         <div class="overflow-x-auto">
