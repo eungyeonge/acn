@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>반려동물 응급처치 가이드 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <div id="header"></div>
+
+  <section class="max-w-6xl mx-auto px-6 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">반려동물 응급처치 가이드</h1>
+      <p class="text-gray-600">응급 상황에서 반려동물을 보호하는 방법</p>
+    </div>
+
+    <!-- 중요 안내 -->
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+      <p class="text-red-800 font-semibold">⚠️ 중요: 응급 상황 시 즉시 동물병원으로 이동하세요!</p>
+      <p class="text-red-700 text-sm mt-2">이 가이드는 응급 상황에서의 기본 처치 방법이며, 전문 의료진의 치료를 대체할 수 없습니다.</p>
+    </div>
+
+    <!-- 반려동물 선택 -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <h2 class="text-2xl font-bold mb-4">반려동물 선택</h2>
+      <div class="flex gap-4">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="emergencyPetType" value="dog" checked onchange="changeEmergencyPetType('dog')" class="w-5 h-5 text-blue-600">
+          <span class="text-lg">🐕 강아지</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="emergencyPetType" value="cat" onchange="changeEmergencyPetType('cat')" class="w-5 h-5 text-blue-600">
+          <span class="text-lg">🐱 고양이</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 강아지 응급처치 -->
+    <div id="emergency-dog" class="space-y-6">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold mb-4">🐕 강아지 응급처치</h2>
+        
+        <div class="space-y-6">
+          <div class="border-l-4 border-red-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-red-700">호흡 곤란 / 질식</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 헐떡임, 혀가 파랗게 변함, 기침, 호흡음</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>즉시 동물병원으로 이동 (가장 중요!)</li>
+              <li>목걸이, 하네스 제거</li>
+              <li>입 안에 이물질이 보이면 조심스럽게 제거</li>
+              <li>안정적인 자세로 운반 (목과 머리 지지)</li>
+              <li>호흡이 멈추면 인공호흡 시도 (전문가 지시 시)</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-orange-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-orange-700">중독 / 유해물질 섭취</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 구토, 설사, 경련, 의식 저하, 침 흘림</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>즉시 동물병원으로 이동</li>
+              <li>섭취한 물질의 포장지나 이름 확인</li>
+              <li>구토 유도 금지 (의사 지시 전까지)</li>
+              <li>입 주변 세척 (피부 접촉 시)</li>
+              <li>중독물질 정보를 병원에 전달</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-yellow-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-yellow-700">열사병 / 과열</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 과도한 헐떡임, 침 흘림, 구토, 혼수, 체온 상승</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>즉시 시원한 곳으로 이동</li>
+              <li>미지근한 물로 몸 적시기 (너무 차갑지 않게)</li>
+              <li>발가락 사이, 사타구니, 목 주변 냉각</li>
+              <li>물을 마시도록 권장 (의식이 있을 때만)</li>
+              <li>동물병원으로 이동하며 계속 냉각</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-purple-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-purple-700">출혈 / 상처</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 피가 나옴, 상처, 통증</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>깨끗한 천이나 거즈로 직접 압박</li>
+              <li>상처 부위를 심장보다 높게 유지</li>
+              <li>지혈대 사용 금지 (전문가 지시 시만)</li>
+              <li>상처 세척 (깨끗한 물, 소독제)</li>
+              <li>심한 출혈 시 즉시 병원 이동</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-blue-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-blue-700">경련 / 발작</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 떨림, 경직, 의식 상실, 침 흘림</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>안전한 장소로 이동 (부딪힐 수 있는 것 제거)</li>
+              <li>강제로 움직이지 말기</li>
+              <li>입에 손 넣지 않기 (물지 않도록)</li>
+              <li>시간 측정 (발작 지속 시간)</li>
+              <li>5분 이상 지속 시 즉시 병원 이동</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-green-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-green-700">교통사고 / 충격</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 움직이지 못함, 통증, 출혈, 호흡 곤란</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>움직이지 말고 즉시 병원 연락</li>
+              <li>목과 척추 부상 가능성 있으므로 조심스럽게 운반</li>
+              <li>평평한 판자나 담요로 운반</li>
+              <li>목걸이 제거 (목 부상 가능성)</li>
+              <li>출혈이 있으면 지혈 시도</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 고양이 응급처치 -->
+    <div id="emergency-cat" class="space-y-6 hidden">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold mb-4">🐱 고양이 응급처치</h2>
+        
+        <div class="space-y-6">
+          <div class="border-l-4 border-red-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-red-700">호흡 곤란</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 입을 벌리고 호흡, 헐떡임, 혀가 파랗게 변함</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>즉시 동물병원으로 이동</li>
+              <li>목걸이 제거</li>
+              <li>안정적인 자세로 운반 (케이지 사용 권장)</li>
+              <li>스트레스 최소화</li>
+              <li>호흡이 멈추면 인공호흡 시도 (전문가 지시 시)</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-orange-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-orange-700">중독 / 유해물질 섭취</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 구토, 설사, 경련, 의식 저하, 침 흘림</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>즉시 동물병원으로 이동</li>
+              <li>섭취한 물질 정보 확인</li>
+              <li>구토 유도 금지</li>
+              <li>피부 접촉 시 세척</li>
+              <li>고양이는 특히 릴리아, 백합 등 식물 중독 주의</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-yellow-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-yellow-700">요로 폐색 (URINARY OBSTRUCTION)</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 화장실에 가지만 소변 못 봄, 배를 만지면 아파함, 구토</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>즉시 동물병원으로 이동 (생명 위험!)</li>
+              <li>24시간 이내 치료하지 않으면 사망 가능</li>
+              <li>수컷 고양이에게 흔함</li>
+              <li>물을 마시도록 권장 (의식이 있을 때만)</li>
+              <li>절대 지연하지 말 것</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-purple-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-purple-700">출혈 / 상처</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 피가 나옴, 상처, 통증</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>깨끗한 천으로 직접 압박</li>
+              <li>상처 부위를 심장보다 높게</li>
+              <li>고양이는 스트레스에 민감하므로 조심스럽게</li>
+              <li>상처 세척 (깨끗한 물)</li>
+              <li>심한 출혈 시 즉시 병원 이동</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-blue-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-blue-700">경련 / 발작</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 떨림, 경직, 의식 상실</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>안전한 장소로 이동</li>
+              <li>부딪힐 수 있는 것 제거</li>
+              <li>강제로 움직이지 말기</li>
+              <li>입에 손 넣지 않기</li>
+              <li>5분 이상 지속 시 즉시 병원 이동</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-green-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2 text-green-700">낙상 / 충격</h3>
+            <p class="text-gray-700 mb-2"><strong>증상:</strong> 움직이지 못함, 통증, 출혈</p>
+            <p class="text-gray-700 mb-2"><strong>응급처치:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>움직이지 말고 즉시 병원 연락</li>
+              <li>목과 척추 부상 가능성 있으므로 조심스럽게 운반</li>
+              <li>케이지나 담요로 운반</li>
+              <li>목걸이 제거</li>
+              <li>출혈이 있으면 지혈 시도</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 응급 연락처 -->
+    <div class="bg-blue-50 rounded-lg p-6 mt-6">
+      <h3 class="text-xl font-bold mb-3">📞 응급 연락처</h3>
+      <div class="grid md:grid-cols-2 gap-4 text-gray-700">
+        <div>
+          <p class="font-semibold mb-1">24시간 응급 동물병원 찾기</p>
+          <p class="text-sm">상단 메뉴의 '동물병원조회'에서 응급 병원을 찾으세요</p>
+        </div>
+        <div>
+          <p class="font-semibold mb-1">응급 상황 체크리스트</p>
+          <ul class="text-sm list-disc list-inside space-y-1">
+            <li>의식이 없거나 반응이 없음</li>
+            <li>호흡이 곤란하거나 멈춤</li>
+            <li>심한 출혈</li>
+            <li>경련이 5분 이상 지속</li>
+            <li>중독 의심</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function changeEmergencyPetType(type) {
+      if (type === 'dog') {
+        document.getElementById('emergency-dog').classList.remove('hidden');
+        document.getElementById('emergency-cat').classList.add('hidden');
+      } else {
+        document.getElementById('emergency-dog').classList.add('hidden');
+        document.getElementById('emergency-cat').classList.remove('hidden');
+      }
+    }
+  </script>
+
+</body>
+</html>
+

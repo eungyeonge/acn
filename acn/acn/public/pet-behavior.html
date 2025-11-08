@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>반려동물 행동 가이드 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <div id="header"></div>
+
+  <section class="max-w-6xl mx-auto px-6 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">반려동물 행동 가이드</h1>
+      <p class="text-gray-600">반려동물의 행동을 이해하고 올바르게 대응하는 방법</p>
+    </div>
+
+    <!-- 반려동물 선택 -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <h2 class="text-2xl font-bold mb-4">반려동물 선택</h2>
+      <div class="flex gap-4">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="behaviorPetType" value="dog" checked onchange="changeBehaviorPetType('dog')" class="w-5 h-5 text-blue-600">
+          <span class="text-lg">🐕 강아지</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="behaviorPetType" value="cat" onchange="changeBehaviorPetType('cat')" class="w-5 h-5 text-blue-600">
+          <span class="text-lg">🐱 고양이</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 강아지 행동 가이드 -->
+    <div id="behavior-dog" class="space-y-6">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold mb-4">🐕 강아지 흔한 행동 문제와 해결법</h2>
+        
+        <div class="space-y-6">
+          <div class="border-l-4 border-blue-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">짖기 (과도한 짖음)</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 불안, 지루함, 주의 끌기, 영역 보호</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>짖는 이유를 파악하고 근본 원인 해결</li>
+              <li>충분한 운동과 정신적 자극 제공</li>
+              <li>짖지 않을 때 보상, 짖을 때는 무시</li>
+              <li>차분한 명령어 훈련 ("조용해", "앉아")</li>
+              <li>필요시 전문 훈련사 상담</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-green-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">물기/깨물기</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 강아지 시기, 놀이, 불안, 공격성</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>강아지 시기: 장난감으로 대체, "아니야" 명령</li>
+              <li>성견: 즉시 중단, 타임아웃 적용</li>
+              <li>긍정적 강화: 부드럽게 놀 때 보상</li>
+              <li>사회화 훈련으로 다른 강아지와의 상호작용 학습</li>
+              <li>심각한 경우 전문가 상담 필수</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-yellow-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">분리 불안</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 외로움, 과도한 애착, 변화에 대한 불안</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>점진적으로 혼자 있는 시간 늘리기</li>
+              <li>출입 시 과도한 작별 인사 피하기</li>
+              <li>안정적인 환경 조성 (장난감, 음악 등)</li>
+              <li>운동 후 휴식 시간 제공</li>
+              <li>필요시 페로몬 디퓨저나 전문 상담</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-red-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">배변 실수</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 훈련 부족, 건강 문제, 스트레스, 영역 표시</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>규칙적인 배변 시간 설정</li>
+              <li>올바른 배변 시 즉시 보상</li>
+              <li>실수 시 벌하지 말고 정리만 하기</li>
+              <li>건강 문제 확인 (요로 감염, 당뇨 등)</li>
+              <li>케이지 훈련으로 배변 습관 형성</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-purple-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">파괴 행동</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 지루함, 불안, 치아 문제, 주의 끌기</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>충분한 운동과 정신적 자극 제공</li>
+              <li>안전한 장난감 제공 (저작 장난감 등)</li>
+              <li>파괴할 수 있는 것들을 치우기</li>
+              <li>케이지 훈련으로 안전한 공간 제공</li>
+              <li>치아 건강 확인</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 rounded-lg p-6">
+        <h3 class="text-xl font-bold mb-3">💡 강아지 훈련 팁</h3>
+        <ul class="space-y-2 text-gray-700">
+          <li>• 일관성 있는 명령어와 규칙 사용</li>
+          <li>• 긍정적 강화 (간식, 칭찬) 활용</li>
+          <li>• 짧은 시간(10~15분) 자주 반복</li>
+          <li>• 인내심을 갖고 천천히 진행</li>
+          <li>• 전문 훈련사 도움 받기</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 고양이 행동 가이드 -->
+    <div id="behavior-cat" class="space-y-6 hidden">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold mb-4">🐱 고양이 흔한 행동 문제와 해결법</h2>
+        
+        <div class="space-y-6">
+          <div class="border-l-4 border-blue-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">화장실 밖 배변</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 화장실 청소 부족, 위치 불만, 스트레스, 건강 문제</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>화장실을 하루 1~2회 청소</li>
+              <li>고양이 수 + 1개의 화장실 제공</li>
+              <li>조용하고 사적인 위치에 배치</li>
+              <li>모래 종류 변경 시도</li>
+              <li>건강 문제 확인 (요로 감염, 신장 질환 등)</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-green-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">과도한 그루밍 (털 뽑기)</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 스트레스, 불안, 피부 질환, 알레르기</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>스트레스 원인 제거 (환경 변화, 다른 고양이 등)</li>
+              <li>피부 질환 확인 (벼룩, 알레르기 등)</li>
+              <li>놀이와 정신적 자극 제공</li>
+              <li>페로몬 디퓨저 사용</li>
+              <li>수의사 상담 및 치료</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-yellow-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">공격성 (할퀴기, 물기)</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 놀이, 두려움, 영역 보호, 통증</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>공격 전 신호 파악 (꼬리 흔들기, 귀 접기 등)</li>
+              <li>장난감으로 놀이 유도 (손 대신)</li>
+              <li>안전한 공간 제공 (높은 곳, 은신처)</li>
+              <li>점진적 사회화 (다른 고양이, 사람)</li>
+              <li>통증이나 건강 문제 확인</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-red-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">야간 활동 (밤에 시끄러움)</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 자연스러운 야행성, 지루함, 주의 끌기</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>낮 시간에 충분한 놀이와 활동</li>
+              <li>저녁 식사 시간 조정</li>
+              <li>자동 장난감 제공 (밤에 사용)</li>
+              <li>침대 전에 놀이 세션 제공</li>
+              <li>무시하기 (주의를 주지 않기)</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-purple-500 pl-4">
+            <h3 class="text-xl font-semibold mb-2">가구 긁기</h3>
+            <p class="text-gray-700 mb-2"><strong>원인:</strong> 자연스러운 행동, 영역 표시, 발톱 관리</p>
+            <p class="text-gray-700 mb-2"><strong>해결법:</strong></p>
+            <ul class="list-disc list-inside space-y-1 text-gray-600 ml-4">
+              <li>스크래처 제공 (수직, 수평 다양한 형태)</li>
+              <li>스크래처를 좋아하는 위치에 배치</li>
+              <li>가구에 보호 커버 사용</li>
+              <li>긁는 행동 시 스크래처로 유도</li>
+              <li>정기적으로 발톱 깎기</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 rounded-lg p-6">
+        <h3 class="text-xl font-bold mb-3">💡 고양이 행동 이해 팁</h3>
+        <ul class="space-y-2 text-gray-700">
+          <li>• 고양이는 독립적이지만 관심과 애정 필요</li>
+          <li>• 환경 변화에 민감하므로 점진적 변화</li>
+          <li>• 긍정적 강화로 원하는 행동 유도</li>
+          <li>• 충분한 놀이와 정신적 자극 제공</li>
+          <li>• 이상 행동 시 건강 문제 먼저 확인</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function changeBehaviorPetType(type) {
+      if (type === 'dog') {
+        document.getElementById('behavior-dog').classList.remove('hidden');
+        document.getElementById('behavior-cat').classList.add('hidden');
+      } else {
+        document.getElementById('behavior-dog').classList.add('hidden');
+        document.getElementById('behavior-cat').classList.remove('hidden');
+      }
+    }
+  </script>
+
+</body>
+</html>
+

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>반려동물 케어 가이드 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <div id="header"></div>
+
+  <section class="max-w-6xl mx-auto px-6 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">반려동물 케어 가이드</h1>
+      <p class="text-gray-600">예방접종 일정부터 건강 관리까지, 반려동물을 위한 필수 정보</p>
+    </div>
+
+    <!-- 탭 메뉴 -->
+      <div class="flex flex-wrap gap-2 mb-6 border-b"></div>
+      <button onclick="showTab('health')" id="tab-health" class="px-4 py-2 font-semibold text-gray-600 hover:text-blue-600">
+        🏥 건강 관리 체크리스트
+      </button>
+      <button onclick="showTab('vaccine')" id="tab-vaccine" class="px-4 py-2 font-semibold border-b-2 border-blue-600 text-blue-600">
+        💉 예방접종 일정표
+      </button>
+      <button onclick="showTab('annual')" id="tab-annual" class="px-4 py-2 font-semibold text-gray-600 hover:text-blue-600">
+        📅 연간 케어 가이드
+      </button>
+    </div>
+
+    <!-- 건강 관리 체크리스트 -->
+    <div id="content-health" class="tab-content hidden">
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <h2 class="text-2xl font-bold mb-4">반려동물 선택</h2>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="petType" value="dog" checked onchange="changePetType('dog')" class="w-5 h-5 text-blue-600">
+            <span class="text-lg">🐕 강아지</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="petType" value="cat" onchange="changePetType('cat')" class="w-5 h-5 text-blue-600">
+            <span class="text-lg">🐱 고양이</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 강아지 체크리스트 -->
+      <div id="checklist-dog" class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <h2 class="text-2xl font-bold mb-4">강아지 건강 체크리스트</h2>
+        <div class="space-y-3" id="dog-checklist">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="checkup" class="w-5 h-5 text-blue-600">
+            <span>정기 검진 (1년 1~2회)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="vaccine" class="w-5 h-5 text-blue-600">
+            <span>예방접종 완료</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="deworm" class="w-5 h-5 text-blue-600">
+            <span>구충제 투여 (3개월마다)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="heartworm" class="w-5 h-5 text-blue-600">
+            <span>심장사상충 예방약 (월 1회)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="dental" class="w-5 h-5 text-blue-600">
+            <span>치아 관리 (일상 + 정기 스케일링)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="grooming" class="w-5 h-5 text-blue-600">
+            <span>털 관리 (정기 브러싱)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="nail" class="w-5 h-5 text-blue-600">
+            <span>발톱 깎기 (2~3주마다)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="ear" class="w-5 h-5 text-blue-600">
+            <span>귀 청소 (주 1~2회)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="bath" class="w-5 h-5 text-blue-600">
+            <span>목욕 (2~4주마다)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="dog-check" value="exercise" class="w-5 h-5 text-blue-600">
+            <span>운동량 확보 (일일 산책)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 고양이 체크리스트 -->
+      <div id="checklist-cat" class="bg-white rounded-lg shadow-lg p-6 mb-6 hidden">
+        <h2 class="text-2xl font-bold mb-4">고양이 건강 체크리스트</h2>
+        <div class="space-y-3" id="cat-checklist">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="checkup" class="w-5 h-5 text-blue-600">
+            <span>정기 검진 (1년 1~2회)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="vaccine" class="w-5 h-5 text-blue-600">
+            <span>예방접종 완료</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="deworm" class="w-5 h-5 text-blue-600">
+            <span>구충제 투여 (3개월마다)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="dental" class="w-5 h-5 text-blue-600">
+            <span>치아 관리 (일상 + 정기 스케일링)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="grooming" class="w-5 h-5 text-blue-600">
+            <span>털 관리 (일일 브러싱)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="nail" class="w-5 h-5 text-blue-600">
+            <span>발톱 깎기 (2~3주마다)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="ear" class="w-5 h-5 text-blue-600">
+            <span>귀 청소 (주 1회)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="litter" class="w-5 h-5 text-blue-600">
+            <span>화장실 청소 (일 1~2회)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="water" class="w-5 h-5 text-blue-600">
+            <span>물 공급 (항상 깨끗한 물)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="cat-check" value="play" class="w-5 h-5 text-blue-600">
+            <span>운동 및 놀이 (일일 활동)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 결과보기 버튼 -->
+      <div class="text-center mb-6">
+        <button onclick="showResult()" class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold text-lg">
+          결과보기
+        </button>
+      </div>
+
+      <!-- 결과 표시 영역 -->
+      <div id="result-area" class="hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold mb-4">건강 상태 결과</h2>
+          <div id="result-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 예방접종 일정표 -->
+    <div id="content-vaccine" class="tab-content">
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <h2 class="text-2xl font-bold mb-4">강아지 예방접종 일정표</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-blue-50">
+                <th class="border p-3 text-left">접종 종류</th>
+                <th class="border p-3 text-left">시작 시기</th>
+                <th class="border p-3 text-left">접종 횟수</th>
+                <th class="border p-3 text-left">접종 간격</th>
+                <th class="border p-3 text-left">비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border p-3 font-semibold">종합백신 (DHPPL)</td>
+                <td class="border p-3">6~8주</td>
+                <td class="border p-3">3회</td>
+                <td class="border p-3">3~4주 간격</td>
+                <td class="border p-3">필수</td>
+              </tr>
+              <tr class="bg-gray-50">
+                <td class="border p-3 font-semibold">코로나바이러스</td>
+                <td class="border p-3">6~8주</td>
+                <td class="border p-3">2~3회</td>
+                <td class="border p-3">3~4주 간격</td>
+                <td class="border p-3">필수</td>
+              </tr>
+              <tr>
+                <td class="border p-3 font-semibold">켄넬코프 (기관지염)</td>
+                <td class="border p-3">6~8주</td>
+                <td class="border p-3">2~3회</td>
+                <td class="border p-3">3~4주 간격</td>
+                <td class="border p-3">필수</td>
+              </tr>
+              <tr class="bg-gray-50">
+                <td class="border p-3 font-semibold">광견병</td>
+                <td class="border p-3">3개월 이상</td>
+                <td class="border p-3">1회/년</td>
+                <td class="border p-3">매년</td>
+                <td class="border p-3">법정 필수</td>
+              </tr>
+              <tr>
+                <td class="border p-3 font-semibold">인플루엔자</td>
+                <td class="border p-3">6개월 이상</td>
+                <td class="border p-3">1회/년</td>
+                <td class="border p-3">매년</td>
+                <td class="border p-3">권장</td>
+              </tr>
+              <tr class="bg-gray-50">
+                <td class="border p-3 font-semibold">레프토스피라</td>
+                <td class="border p-3">12주 이상</td>
+                <td class="border p-3">2회/년</td>
+                <td class="border p-3">6개월 간격</td>
+                <td class="border p-3">지역별 권장</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold mb-4">고양이 예방접종 일정표</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-blue-50">
+                <th class="border p-3 text-left">접종 종류</th>
+                <th class="border p-3 text-left">시작 시기</th>
+                <th class="border p-3 text-left">접종 횟수</th>
+                <th class="border p-3 text-left">접종 간격</th>
+                <th class="border p-3 text-left">비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border p-3 font-semibold">3종 혼합백신 (FVRCP)</td>
+                <td class="border p-3">6~8주</td>
+                <td class="border p-3">2~3회</td>
+                <td class="border p-3">3~4주 간격</td>
+                <td class="border p-3">필수</td>
+              </tr>
+              <tr class="bg-gray-50">
+                <td class="border p-3 font-semibold">광견병</td>
+                <td class="border p-3">3개월 이상</td>
+                <td class="border p-3">1회/1~3년</td>
+                <td class="border p-3">1~3년마다</td>
+                <td class="border p-3">법정 필수</td>
+              </tr>
+              <tr>
+                <td class="border p-3 font-semibold">백혈병 (FeLV)</td>
+                <td class="border p-3">8주 이상</td>
+                <td class="border p-3">2회</td>
+                <td class="border p-3">3~4주 간격</td>
+                <td class="border p-3">실외/다묘 권장</td>
+              </tr>
+              <tr class="bg-gray-50">
+                <td class="border p-3 font-semibold">클라미디아</td>
+                <td class="border p-3">9주 이상</td>
+                <td class="border p-3">2회</td>
+                <td class="border p-3">3~4주 간격</td>
+                <td class="border p-3">다묘 가정 권장</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 연간 케어 가이드 -->
+    <div id="content-annual" class="tab-content hidden">
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <h2 class="text-2xl font-bold mb-4">연간 케어 일정표</h2>
+        <div class="space-y-4">
+          <div class="border-l-4 border-blue-500 pl-4">
+            <h3 class="font-bold text-lg mb-2">매월</h3>
+            <ul class="list-disc list-inside space-y-1 text-gray-700">
+              <li>심장사상충 예방약 투여 (강아지)</li>
+              <li>구충제 투여 (필요시)</li>
+              <li>체중 측정 및 기록</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-green-500 pl-4">
+            <h3 class="font-bold text-lg mb-2">3개월마다</h3>
+            <ul class="list-disc list-inside space-y-1 text-gray-700">
+              <li>구충제 정기 투여</li>
+              <li>발톱 깎기</li>
+              <li>털 관리 및 브러싱</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-yellow-500 pl-4">
+            <h3 class="font-bold text-lg mb-2">6개월마다</h3>
+            <ul class="list-disc list-inside space-y-1 text-gray-700">
+              <li>정기 건강 검진</li>
+              <li>치아 검사</li>
+              <li>레프토스피라 접종 (강아지, 지역별)</li>
+            </ul>
+          </div>
+
+          <div class="border-l-4 border-red-500 pl-4">
+            <h3 class="font-bold text-lg mb-2">매년</h3>
+            <ul class="list-disc list-inside space-y-1 text-gray-700">
+              <li>광견병 접종</li>
+              <li>인플루엔자 접종 (강아지)</li>
+              <li>종합 건강 검진</li>
+              <li>혈액 검사</li>
+              <li>치과 스케일링 (필요시)</li>
+              <li>X-ray 검사 (노령 동물)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 rounded-lg p-6">
+        <h3 class="font-bold text-lg mb-2">💡 케어 팁</h3>
+        <ul class="space-y-2 text-gray-700">
+          <li>• 접종 일정은 마이페이지의 '예방접종 캘린더'에서 관리하세요</li>
+          <li>• 이상 징후 발견 시 즉시 동물병원을 방문하세요</li>
+          <li>• 정기 검진은 질병 조기 발견에 중요합니다</li>
+          <li>• 반려동물의 나이와 건강 상태에 따라 일정이 달라질 수 있습니다</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function showTab(tabName) {
+      // 모든 탭 콘텐츠 숨기기
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      
+      // 모든 탭 버튼 스타일 초기화
+      document.querySelectorAll('[id^="tab-"]').forEach(btn => {
+        btn.classList.remove('border-b-2', 'border-blue-600', 'text-blue-600');
+        btn.classList.add('text-gray-600');
+      });
+      
+      // 선택된 탭 콘텐츠 표시
+      document.getElementById(`content-${tabName}`).classList.remove('hidden');
+      
+      // 선택된 탭 버튼 스타일 적용
+      const activeBtn = document.getElementById(`tab-${tabName}`);
+      activeBtn.classList.add('border-b-2', 'border-blue-600', 'text-blue-600');
+      activeBtn.classList.remove('text-gray-600');
+      
+      // 결과 영역 숨기기
+      if (tabName === 'health') {
+        document.getElementById('result-area').classList.add('hidden');
+      }
+    }
+
+    function changePetType(type) {
+      if (type === 'dog') {
+        document.getElementById('checklist-dog').classList.remove('hidden');
+        document.getElementById('checklist-cat').classList.add('hidden');
+      } else {
+        document.getElementById('checklist-dog').classList.add('hidden');
+        document.getElementById('checklist-cat').classList.remove('hidden');
+      }
+      // 결과 영역 숨기기
+      document.getElementById('result-area').classList.add('hidden');
+    }
+
+    function showResult() {
+      const petType = document.querySelector('input[name="petType"]:checked').value;
+      const checkboxes = document.querySelectorAll(`input[name="${petType}-check"]:checked`);
+      const allCheckboxes = document.querySelectorAll(`input[name="${petType}-check"]`);
+      
+      const checkedCount = checkboxes.length;
+      const totalCount = allCheckboxes.length;
+      const percentage = Math.round((checkedCount / totalCount) * 100);
+      
+      let status, statusColor, statusText, statusIcon, recommendations;
+      
+      if (percentage >= 90) {
+        status = 'excellent';
+        statusColor = 'bg-green-100 text-green-800 border-green-500';
+        statusText = '매우 양호';
+        statusIcon = '✅';
+        recommendations = [
+          '완벽한 건강 관리 상태입니다!',
+          '현재 관리 상태를 유지해주세요.',
+          '정기 검진을 계속 받으시면 더욱 좋습니다.'
+        ];
+      } else if (percentage >= 70) {
+        status = 'good';
+        statusColor = 'bg-blue-100 text-blue-800 border-blue-500';
+        statusText = '양호';
+        statusIcon = '👍';
+        recommendations = [
+          '전반적으로 좋은 건강 관리 상태입니다.',
+          '체크하지 않은 항목들을 추가로 관리해주세요.',
+          '정기 검진과 예방접종을 꾸준히 받으시면 더욱 좋습니다.'
+        ];
+      } else if (percentage >= 50) {
+        status = 'fair';
+        statusColor = 'bg-yellow-100 text-yellow-800 border-yellow-500';
+        statusText = '주의 필요';
+        statusIcon = '⚠️';
+        recommendations = [
+          '일부 건강 관리 항목이 누락되어 있습니다.',
+          '특히 정기 검진과 예방접종은 필수입니다.',
+          '구충제와 예방약 투여를 정기적으로 해주세요.',
+          '동물병원에서 상담을 받아보시는 것을 권장합니다.'
+        ];
+      } else {
+        status = 'poor';
+        statusColor = 'bg-red-100 text-red-800 border-red-500';
+        statusText = '개선 필요';
+        statusIcon = '🔴';
+        recommendations = [
+          '건강 관리가 많이 부족한 상태입니다.',
+          '즉시 동물병원을 방문하여 정기 검진을 받으세요.',
+          '예방접종과 구충제는 반려동물 건강의 기본입니다.',
+          '체크리스트의 모든 항목을 꾸준히 관리해주세요.',
+          '건강 관리 일정을 정하고 꾸준히 실천하시기 바랍니다.'
+        ];
+      }
+      
+      const petName = petType === 'dog' ? '강아지' : '고양이';
+      const missingItems = [];
+      allCheckboxes.forEach(checkbox => {
+        if (!checkbox.checked) {
+          const label = checkbox.parentElement.querySelector('span').textContent;
+          missingItems.push(label);
+        }
+      });
+      
+      let resultHTML = `
+        <div class="border-2 ${statusColor} rounded-lg p-6 mb-6">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-4xl">${statusIcon}</span>
+            <div>
+              <h3 class="text-2xl font-bold">${statusText}</h3>
+              <p class="text-lg mt-1">${petName} 건강 관리 점수: ${percentage}% (${checkedCount}/${totalCount})</p>
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+            <div class="h-4 rounded-full ${statusColor.split(' ')[0]}" style="width: ${percentage}%"></div>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-bold mb-3">💡 권장 사항</h3>
+          <ul class="list-disc list-inside space-y-2 text-gray-700">
+            ${recommendations.map(rec => `<li>${rec}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      
+      if (missingItems.length > 0) {
+        resultHTML += `
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <h3 class="text-lg font-bold mb-2 text-yellow-800">⚠️ 체크하지 않은 항목</h3>
+            <ul class="list-disc list-inside space-y-1 text-yellow-700">
+              ${missingItems.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+      
+      document.getElementById('result-content').innerHTML = resultHTML;
+      document.getElementById('result-area').classList.remove('hidden');
+      
+      // 결과 영역으로 스크롤
+      document.getElementById('result-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+</html>
+
