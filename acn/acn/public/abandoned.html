@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>유기동물 보호 현황 | ACN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="include.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <div id="header"></div>
+
+  <section class="max-w-7xl mx-auto px-6 py-8">
+    <h1 class="text-2xl font-bold mb-4">유기동물 보호 현황</h1>
+
+    <div class="flex items-center gap-3 mb-6">
+      <input id="search" type="text" placeholder="품종/특징 검색" class="border rounded px-3 py-2 w-full max-w-xs" />
+      <button id="refreshBtn" class="px-4 py-2 bg-blue-600 text-white rounded">새로고침</button>
+    </div>
+
+    <div id="list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    <div class="flex justify-center items-center gap-3 mt-8">
+      <button id="prev" class="px-3 py-2 border rounded">이전</button>
+      <span id="pageLabel" class="text-sm text-gray-600"></span>
+      <button id="next" class="px-3 py-2 border rounded">다음</button>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script>
+    let page = 1;
+    const size = 12;
+
+    async function fetchAnimals() {
+      const res = await fetch(`/api/abandoned-animals?page=${page}&size=${size}`);
+      const json = await res.json();
+      if (!json.success) {
+        throw new Error('데이터 로드 실패');
+      }
+      return json.data;
+    }
+
+    function render(items) {
+      const q = document.getElementById('search').value.trim();
+      const filtered = Array.isArray(items?.data) ? items.data : (items?.records || []);
+      const list = document.getElementById('list');
+      const data = filtered.filter((it) => {
+        const text = `${it.kindCd || ''} ${it.colorCd || ''} ${it.specialMark || ''}`.toLowerCase();
+        return q ? text.includes(q.toLowerCase()) : true;
+      });
+
+      list.innerHTML = '';
+      if (data.length === 0) {
+        list.innerHTML = '<div class="col-span-full text-center text-gray-500">표시할 데이터가 없습니다.</div>';
+        return;
+      }
+
+      for (const it of data) {
+        const img = it.filename || it.popfile || it.thumbImage || '';
+        const kind = it.kindCd || it.kind || '동물';
+        const place = it.happenPlace || it.careNm || '';
+        const age = it.age || it.approximateAge || '정보없음';
+        const sex = it.sexCd || it.sex || '정보없음';
+        const date = it.happenDt || it.noticeSdt || it.noticeEdt || '';
+        const care = it.careNm || it.careAddr || '';
+        const card = document.createElement('a');
+        card.className = 'border rounded-lg shadow hover:shadow-md overflow-hidden bg-white block';
+        card.href = '#';
+        card.innerHTML = `
+          <img src="${img}" alt="${kind}" class="w-full h-40 object-cover bg-gray-100">
+          <div class="p-4">
+            <div class="font-semibold">${kind}</div>
+            <div class="mt-2 text-sm text-gray-700">
+              <span class="inline-block mr-2">나이추정: <strong>${age}</strong></span>
+              <span class="inline-block mr-2">성별: <strong>${sex}</strong></span>
+              <span class="inline-block">발견일: <strong>${date || '정보없음'}</strong></span>
+            </div>
+            <div class="text-xs text-gray-500 mt-2">보호소: ${care || place || '정보없음'}</div>
+          </div>
+        `;
+        list.appendChild(card);
+      }
+      document.getElementById('pageLabel').textContent = `${page} 페이지`;
+    }
+
+    async function load() {
+      try {
+        const data = await fetchAnimals();
+        render(data);
+      } catch (e) {
+        console.error(e);
+        document.getElementById('list').innerHTML = '<div class="col-span-full text-center text-red-500">데이터를 불러오지 못했습니다.</div>';
+      }
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', load);
+    document.getElementById('search').addEventListener('input', load);
+    document.getElementById('prev').addEventListener('click', () => { if (page > 1) { page--; load(); } });
+    document.getElementById('next').addEventListener('click', () => { page++; load(); });
+
+    load();
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script>
+    // Firebase 초기화 (include.js에서 헤더/유저메뉴 렌더링용)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxXE-GP-tLNN5zZ81j-A0QtcN6RKIRxZE",
+      authDomain: "acnproject-619dc.firebaseapp.com",
+      projectId: "acnproject-619dc",
+      storageBucket: "acnproject-619dc.firebasestorage.app",
+      messagingSenderId: "205809961445",
+      appId: "1:205809961445:web:7603261a5bae3316d7070c",
+      measurementId: "G-4H0S2GDMGJ"
+    };
+    if (!firebase.apps || firebase.apps.length === 0) {
+      firebase.initializeApp(firebaseConfig);
+    }
+  </script>
+
+</body>
+</html>
+
+
